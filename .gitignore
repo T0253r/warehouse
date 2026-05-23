@@ -1,0 +1,36 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# vscode
+.vscode
+
+# ---------------------------------------------------
+# dbt artifacts
+# ---------------------------------------------------
+target/
+pipeline/dbt_project/target/
+
+# dbt logs
+logs/
+pipeline/dbt_project/logs/
+
+# dbt dependencies
+dbt_packages/
+
+# dbt anonymous usage tracking configuration
+.user.yml
+
+# ---------------------------------------------------
+# DuckDB local databases
+# ---------------------------------------------------
+*.db
+*.db.wal
+*.duckdb

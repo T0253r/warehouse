@@ -1,0 +1,6 @@
+duck_warehouse:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../../data/duck_warehouse.db

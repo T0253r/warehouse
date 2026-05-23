@@ -1,0 +1,14 @@
+models:
+  - name: fct_placeholder
+    columns:
+      - name: accident_id
+        tests:
+          - unique
+          - not_null
+      - name: severity
+        tests:
+          - accepted_values:
+              values: 
+                - 'Fatal'
+                - 'Serious'
+                - 'Unknown / Invalid Input'
