@@ -1,7 +1,7 @@
 WITH raw_data AS (
     -- Read the CSV safely as text strings. 
     -- Path is relative to the dbt_project folder where you run the command!
-    SELECT * FROM read_csv_auto('../../data/archive/messy_test.csv', all_varchar=true)
+    SELECT * FROM read_csv_auto('{{ env_var("MAIN_PROJECT_ROOT_DIR") }}/data/archive/messy_test.csv', all_varchar=true)
 ),
 
 resolved_severities AS (

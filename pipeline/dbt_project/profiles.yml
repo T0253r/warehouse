@@ -3,4 +3,4 @@ duck_warehouse:
   outputs:
     dev:
       type: duckdb
-      path: ../../data/duck_warehouse.db
+      path: "{{ env_var('MAIN_PROJECT_ROOT_DIR') }}/data/duck_warehouse.db"

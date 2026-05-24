@@ -1,20 +1,14 @@
-# Name your project (must use underscores, no hyphens!)
 name: 'duck_warehouse'
 version: '1.0.0'
 config-version: 2
 
 profile: 'duck_warehouse'
 
-# Tell dbt where to look for your files
 model-paths: ["models"]
-seed-paths: ["seeds"]
+analysis-paths: ["analyses"]
 test-paths: ["tests"]
+seed-paths: ["seeds"]
 macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
 
-# Set default materializations for our folder structure
-models:
-  duck_warehouse:
-    staging:
-      +materialized: view  # Staging models don't take up disk space
-    marts:
-      +materialized: table # Marts are saved physically for fast querying
+packages-install-path: "{{ env_var('DBT_PROJECT_DIR') }}/dbt_packages"
