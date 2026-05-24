@@ -12,3 +12,12 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 packages-install-path: "{{ env_var('DBT_PROJECT_DIR') }}/dbt_packages"
+
+models:
+  duck_warehouse:
+    +materialized: view
+    
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

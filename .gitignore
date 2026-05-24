@@ -9,9 +9,7 @@ wheels/
 # Virtual environments
 .venv
 
-# ---------------------------------------------------
 # dbt artifacts
-# ---------------------------------------------------
 target/
 pipeline/dbt_project/target/
 
@@ -25,9 +23,10 @@ dbt_packages/
 # dbt anonymous usage tracking configuration
 .user.yml
 
-# ---------------------------------------------------
 # DuckDB local databases
-# ---------------------------------------------------
 *.db
 *.db.wal
 *.duckdb
+
+# Complete dataset
+complete_dataset

@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: dft
+    description: "Raw STATS19 open data downloaded from the DfT."
+    schema: main
+    tables:
+      - name: collision
+        meta:
+          external_location: "data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv"
+      - name: vehicle
+        meta:
+          external_location: "data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv"
+      - name: casualty
+        meta:
+          external_location: "data/complete_dataset/dft-road-casualty-statistics-vehicle-1979-latest-published-year.csv"
