@@ -3,5 +3,22 @@
     "DBT_PROFILES_DIR": "${workspaceFolder}/pipeline/dbt_project",
     "DBT_PROJECT_DIR": "${workspaceFolder}/pipeline/dbt_project",
     "MAIN_PROJECT_ROOT_DIR": "${workspaceFolder}"
-  }
+  },
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "*.parquet": "duckdb.dataFileViewer",
+    "*.csv": "duckdb.dataFileViewer",
+    "*.tsv": "duckdb.dataFileViewer",
+    "*.xlsx": "duckdb.dataFileViewer"
+  },
+  "duckdb.databases": [
+    {
+      "alias": "duck_warehouse",
+      "type": "file",
+      "path": "/home/t0253r/Studia/hurtownie/duck_warehouse/data/duck_warehouse.duckdb",
+      "readOnly": true,
+      "attached": true
+    }
+  ],
+  "duckdb.defaultDatabase": "duck_warehouse",
 }
