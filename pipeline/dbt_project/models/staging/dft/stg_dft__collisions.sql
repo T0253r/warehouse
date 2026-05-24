@@ -9,8 +9,8 @@ renamed as (
         collision_index,
         
         cast(collision_year as integer) as collision_year,
-        cast([date] as date) as collision_date,
-        cast([time] as time) as collision_time,
+        cast({{ adapter.quote('date') }} as date) as collision_date,
+        cast({{ adapter.quote('time') }} as time) as collision_time,
         
         cast(longitude as float) as longitude,
         cast(latitude as float) as latitude,

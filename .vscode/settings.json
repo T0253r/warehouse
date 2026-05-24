@@ -8,14 +8,4 @@
     "*.copilotmd": "vscode.markdown.preview.editor",
     "file:/**/*.parquet": "jupyter-data-wrangler"
   },
-  "duckdb.databases": [
-    {
-      "alias": "duck_warehouse",
-      "type": "file",
-      "path": "/home/t0253r/Studia/hurtownie/duck_warehouse/data/duck_warehouse.duckdb",
-      "readOnly": true,
-      "attached": true
-    }
-  ],
-  "duckdb.defaultDatabase": "duck_warehouse",
 }
