@@ -6,11 +6,16 @@ renamed as (
     select
 
         {{ dbt_utils.generate_surrogate_key(['collision_index', 'vehicle_reference']) }} as vehicle_key,
-
+        {{ dbt_utils.generate_surrogate_key(['collision_index']) }} as collision_key,
+        
         collision_index,
+        vehicle_reference,
+        
+        cast(escooter_flag as boolean) as is_escooter,
+    
+
         collision_year,
         collision_ref_no,
-        vehicle_reference,
         vehicle_type,
         towing_and_articulation,
         vehicle_manoeuvre_historic,
@@ -37,7 +42,6 @@ renamed as (
         generic_make_model,
         driver_imd_decile,
         lsoa_of_driver,
-        escooter_flag,
         driver_distance_banding
         
     from source

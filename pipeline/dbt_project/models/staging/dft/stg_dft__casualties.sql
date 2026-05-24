@@ -7,11 +7,19 @@ renamed as (
     
         {{ dbt_utils.generate_surrogate_key(['collision_index', 'casualty_reference']) }} as casualty_key,
         
+        {{ dbt_utils.generate_surrogate_key(['collision_index']) }} as collision_key,
+        {{ dbt_utils.generate_surrogate_key(['collision_index', 'vehicle_reference']) }} as vehicle_key,
+        
         collision_index,
-        collision_year,
         collision_ref_no,
         vehicle_reference,
         casualty_reference,
+
+        cast(collision_year as integer) as collision_year,
+        
+        cast(pedestrian_road_maintenance_worker as boolean) as is_pedestrian_road_maintenance_worker,
+        
+        
         casualty_class,
         sex_of_casualty,
         age_of_casualty,
@@ -27,10 +35,12 @@ renamed as (
         lsoa_of_casualty,
         enhanced_casualty_severity,
         casualty_injury_based,
+        casualty_distance_banding,
         casualty_adjusted_severity_serious,
         casualty_adjusted_severity_slight,
-        casualty_distance_banding
+
     from source
+
 )
 
 select * from renamed

@@ -4,20 +4,25 @@ with source as (
 
 renamed as (
     select
+
+        {{ dbt_utils.generate_surrogate_key(['collision_index']) }} as collision_key,
         collision_index,
-        collision_year,
+        
+        cast(collision_year as integer) as collision_year,
+        cast([date] as date) as collision_date,
+        cast([time] as time) as collision_time,
+        
+        cast(longitude as float) as longitude,
+        cast(latitude as float) as latitude,
+
         collision_ref_no,
         location_easting_osgr,
         location_northing_osgr,
-        longitude,
-        latitude,
         police_force,
         collision_severity,
         number_of_vehicles,
         number_of_casualties,
-        date,
         day_of_week,
-        time,
         local_authority_district,
         local_authority_ons_district,
         local_authority_highway,
@@ -48,6 +53,7 @@ renamed as (
         collision_injury_based,
         collision_adjusted_severity_serious,
         collision_adjusted_severity_slight
+
     from source
 )
 
