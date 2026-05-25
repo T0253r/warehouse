@@ -1,0 +1,8 @@
+skidding_and_overturning_code,skidding_and_overturning_label
+-1,Data missing or out of range
+1,Skidded
+2,Skidded and overturned
+3,Jackknifed
+4,Jackknifed and overturned
+5,Overturned
+9,unknown (self reported)

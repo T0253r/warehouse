@@ -1,0 +1,10 @@
+second_road_class_code,second_road_class_label
+-1,Data missing or out of range
+0,Not at junction or within 20 metres
+1,Motorway
+2,A(M)
+3,A
+4,B
+5,C
+6,Unclassified
+9,Unknown (self rep only)

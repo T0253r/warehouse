@@ -1,0 +1,11 @@
+pedestrian_crossing_code,pedestrian_crossing_label
+-1,Data missing or out of range
+0,No physical crossing facility within 50m
+11,Human crossing control by school crossing patrol
+12,Human crossing control by other authorised person
+13,Zebra crossing
+14,Pedestrian light crossing (pelican or puffin or toucan or similar)
+15,Pedestrian phase at traffic signal
+16,Footbridge or subway
+17,Central refuge - no other controls
+99,unknown (self reported)

@@ -109,6 +109,6 @@ def generate_yaml_schema(input_csv_path, output_yml_path):
 
 if __name__ == "__main__":
     input_file = "/home/t0253r/Studia/hurtownie/warehouse/data/data_guide/dft-road-casualty-statistics-road-safety-open-dataset-data-guide-2024.csv"
-    output_file = "/home/t0253r/Studia/hurtownie/warehouse/pipeline/scripts/generated_schema.yml"
+    output_file = "/home/t0253r/Studia/hurtownie/warehouse/pipeline/scripts/schema_genaration/generated_schema.yml"
     
     generate_yaml_schema(input_file, output_file)

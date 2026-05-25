@@ -1,0 +1,8 @@
+junction_detail_code,junction_detail_label
+-1,Data missing or out of range
+0,Not at junction or within 20 metres
+13,T or staggered junction
+16,Crossroads
+17,Junction with more than four arms (not roundabout)
+18,Using private drive or entrance
+99,unknown (self reported)

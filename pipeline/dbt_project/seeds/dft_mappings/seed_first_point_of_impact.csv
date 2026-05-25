@@ -1,0 +1,8 @@
+first_point_of_impact_code,first_point_of_impact_label
+-1,Data missing or out of range
+0,Did not impact
+1,Front
+2,Back
+3,Offside
+4,Nearside
+9,unknown (self reported)

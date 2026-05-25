@@ -1,0 +1,20 @@
+vehicle_manoeuvre_code,vehicle_manoeuvre_label
+-1,Data missing or out of range
+1,Reversing
+2,Parked
+3,Waiting to go ahead
+4,Slowing or stopping
+5,Moving off
+6,U-turn
+7,Turning left
+8,Waiting to turn left
+9,Turning right
+10,Waiting to turn right
+11,Changing lane to left
+12,Changing lane to right
+13,Over taking moving vehicle on its offside
+14,Overtaking stationary vehicle on its offside
+15,Overtaking on nearside (passengers side nearest kerb)
+19,Going ahead
+20,Parking
+99,unknown (self reported)

@@ -1,0 +1,5 @@
+did_police_officer_attend_scene_of_collision_code,did_police_officer_attend_scene_of_collision_label
+-1,Data missing or out of range
+1,Yes
+2,No
+3,No - accident was reported using a self completion  form (self rep only)
