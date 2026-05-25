@@ -10,9 +10,9 @@ Fact_Collision: {
   location_key: string {constraint: foreign_key}
   infrasturcture_key: string {constraint: foreign_key}
   condition_key: string {constraint: foreign_key}
-  collision_severity: string
-  number_of_vehicles: string
-  number_of_casualties: string
+  # collision_severity: string
+  number_of_vehicles: int
+  number_of_casualties: int
   # enhanced_severity_collision: string
   # collision_injury_based: string
 }
@@ -39,7 +39,7 @@ Dim_Casualty: {
   casualty_class: string
   casualty_type: string
   sex_of_casualty: string
-  age_of_casualty: string
+  age_of_casualty: int
   age_band_of_casualty: string
   casualty_severity: string
   # pedestrian_location: string
@@ -55,14 +55,14 @@ Dim_Vehicle: {
   vehicle_key: string {constraint: primary_key}
   vehicle_type: string
   # is_escooter: boolean
-  engine_capacity_cc: string
+  engine_capacity_cc: int
   propulsion_code: string
-  age_of_vehicle: string
+  age_of_vehicle: int
   generic_make_model: string
   # towing_and_articulation: string
   vehicle_left_hand_drive: string
   sex_of_driver: string
-  age_of_driver: string
+  age_of_driver: int
   age_band_of_driver: string
   # journey_purpose_of_driver: string
   # driver_imd_decile: string
@@ -105,7 +105,7 @@ Dim_Infrastructure: {
   second_road_class: string
   second_road_number: string
   road_type: string
-  speed_limit: string
+  speed_limit: int
   # junction_detail: string
   # junction_control: string
   # pedestrian_crossing: string
