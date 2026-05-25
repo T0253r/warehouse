@@ -493,6 +493,7 @@ dependencies = [
     { name = "dbt-duckdb" },
     { name = "ipykernel" },
     { name = "openpyxl" },
+    { name = "pyyaml" },
     { name = "streamlit" },
 ]
 
@@ -501,6 +502,7 @@ requires-dist = [
     { name = "dbt-duckdb", specifier = ">=1.10.1" },
     { name = "ipykernel", specifier = ">=7.2.0" },
     { name = "openpyxl", specifier = ">=3.1.5" },
+    { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "streamlit", specifier = ">=1.57.0" },
 ]
 

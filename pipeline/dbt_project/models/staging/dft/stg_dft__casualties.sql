@@ -15,9 +15,7 @@ renamed as (
         vehicle_reference,
         casualty_reference,
 
-        cast(collision_year as integer) as collision_year,
-        
-        cast(pedestrian_road_maintenance_worker as boolean) as is_pedestrian_road_maintenance_worker,
+        collision_year,
         
         
         casualty_class,
@@ -29,6 +27,7 @@ renamed as (
         pedestrian_movement,
         car_passenger,
         bus_or_coach_passenger,
+        pedestrian_road_maintenance_worker,
         pedestrian_road_maintenance_worker,
         casualty_type,
         casualty_imd_decile,

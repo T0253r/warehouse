@@ -1,5 +1,3 @@
-version: 2
-
 sources:
   - name: dft
     description: Raw STATS19 open data downloaded from the DfT.
@@ -2114,3 +2112,30 @@ sources:
                   postcode
                 5: Collision occurred over 100km of casualties home postcode
                 -1: Data missing or out of range
+      - name: historical_revisions
+        meta:
+          external_location: "data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv"
+        columns:
+          - name: accident_index
+            description: unique value for each accident. The accident_index combines
+              the accident_year and accident_ref_no to form a unique ID. It can be
+              used to join to Vehicle and Casualty
+          - name: accident_year
+          - name: accident_ref_no
+            description: In year id used by the police to reference a collision. It
+              is not unique outside of the year, use accident_index for linking to
+              other years
+          - name: police_force
+            description: (See above)
+          - name: vehicle_reference
+            description: unique value for each vehicle in a singular accident. Can
+              be used to join a Casualty to a vehicle
+          - name: casualty_reference
+            description: unique value for each casualty in a singular accident (historical
+              years may be unique to a singular vehicle in a road accident)
+          - name: variable
+            description: (See police_force values in accident listings for values)
+          - name: previously_published_value
+          - name: replacement_value
+          - name: effective_date_of_change
+            description: Date the change was made
