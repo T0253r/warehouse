@@ -3,90 +3,137 @@ sources:
     description: Raw STATS19 open data downloaded from the DfT.
     schema: main
     tables:
-      - name: collision
-        meta:
-            external_location: "data/complete_dataset/dft-road-casualty-statistics-collision-1979-latest-published-year.csv"
+      - name: casualty
         columns:
-          - name: collision_index
-            description: unique value for each collision. The collision_index combines
-              the collision_year and collision_ref_no to form a unique ID. It can
-              be used to join to Vehicle and Casualty
-          - name: collision_year
-          - name: collision_ref_no
-            description: In year id used by the police to reference a collision. It
-              is not unique outside of the year, use collision_index for linking to
-              other years
-          - name: location_easting_osgr
-            description: Null if not known
-          - name: location_northing_osgr
-            description: Null if not known
-          - name: longitude
-            description: Null if not known
-          - name: latitude
-            description: Null if not known
-          - name: police_force
-            description: category discontinued in 2019
+          - name: age_band_of_casualty
             meta:
               allowed_values:
-                1: Metropolitan Police
-                3: Cumbria
-                4: Lancashire
-                5: Merseyside
-                6: Greater Manchester
-                7: Cheshire
-                10: Northumbria
-                11: Durham
-                12: North Yorkshire
-                13: West Yorkshire
-                14: South Yorkshire
-                16: Humberside
-                17: Cleveland
-                20: West Midlands
-                21: Staffordshire
-                22: West Mercia
-                23: Warwickshire
-                30: Derbyshire
-                31: Nottinghamshire
-                32: Lincolnshire
-                33: Leicestershire
-                34: Northamptonshire
-                35: Cambridgeshire
-                36: Norfolk
-                37: Suffolk
-                40: Bedfordshire
-                41: Hertfordshire
-                42: Essex
-                43: Thames Valley
-                44: Hampshire
-                45: Surrey
-                46: Kent
-                47: Sussex
-                48: City of London
-                50: Devon and Cornwall
-                52: Avon and Somerset
-                53: Gloucestershire
-                54: Wiltshire
-                55: Dorset
-                60: North Wales
-                61: Gwent
-                62: South Wales
-                63: Dyfed-Powys
-                91: Northern
-                92: Grampian
-                93: Tayside
-                94: Fife
-                95: Lothian and Borders
-                96: Central
-                97: Strathclyde
-                98: Dumfries and Galloway
-                99: Police Scotland
-          - name: collision_severity
+                1: 0 - 5
+                2: 6 - 10
+                3: 11 - 15
+                4: 16 - 20
+                5: 21 - 25
+                6: 26 - 35
+                7: 36 - 45
+                8: 46 - 55
+                9: 56 - 65
+                10: 66 - 75
+                11: Over 75
+                -1: Data missing or out of range
+          - name: age_of_casualty
+            meta:
+              allowed_values:
+                -1: Data missing or out of range
+          - name: bus_or_coach_passenger
+            meta:
+              allowed_values:
+                0: Not a bus or coach passenger
+                1: Boarding
+                2: Alighting
+                3: Standing passenger
+                4: Seated passenger
+                9: unknown (self reported)
+                -1: Data missing or out of range
+          - name: car_passenger
+            meta:
+              allowed_values:
+                0: Not car passenger
+                1: Front seat passenger
+                2: Rear seat passenger
+                9: unknown (self reported)
+                -1: Data missing or out of range
+          - name: casualty_adjusted_serious
+          - name: casualty_adjusted_slight
+          - name: casualty_class
+            meta:
+              allowed_values:
+                1: Driver or rider
+                2: Passenger
+                3: Pedestrian
+          - name: casualty_distance_banding
+            description: field introduced in 2023
+            meta:
+              allowed_values:
+                1: Collision occurred within 5km of casualties home postcode
+                2: Collision occurred between 5.001 and 10km of casualties home postcode
+                3: Collision occurred between 10.001 and 20km of casualties home postcode
+                4: Collision occurred between 20.001 and 100km of casualties home
+                  postcode
+                5: Collision occurred over 100km of casualties home postcode
+                -1: Data missing or out of range
+          - name: casualty_imd_decile
+            description: field introduced in 2016
+            meta:
+              allowed_values:
+                1: Most deprived 10%
+                2: More deprived 10-20%
+                3: More deprived 20-30%
+                4: More deprived 30-40%
+                5: More deprived 40-50%
+                6: Less deprived 40-50%
+                7: Less deprived 30-40%
+                8: Less deprived 20-30%
+                9: Less deprived 10-20%
+                10: Least deprived 10%
+                -1: Data missing or out of range
+          - name: casualty_injury_based
+            meta:
+              allowed_values:
+                0: Based on severity reporting
+                1: Based on Injury code reporting
+          - name: casualty_reference
+            description: unique value for each casualty in a singular accident (historical
+              years may be unique to a singular vehicle in a road accident)
+          - name: casualty_severity
             meta:
               allowed_values:
                 1: Fatal
                 2: Serious
                 3: Slight
-          - name: enhanced_collision_severity
+          - name: casualty_type
+            meta:
+              allowed_values:
+                0: Pedestrian
+                1: Cyclist
+                2: Motorcycle 50cc and under rider or passenger
+                3: Motorcycle 125cc and under rider or passenger
+                4: Motorcycle over 125cc and up to 500cc rider or  passenger
+                5: Motorcycle over 500cc rider or passenger
+                8: Taxi/Private hire car occupant
+                9: Car occupant
+                10: Minibus (8 - 16 passenger seats) occupant
+                11: Bus or coach occupant (17 or more pass seats)
+                16: Horse rider
+                17: Agricultural vehicle occupant
+                18: Tram occupant
+                19: Van / Goods vehicle (3.5 tonnes mgw or under) occupant
+                20: Goods vehicle (over 3.5t. and under 7.5t.) occupant
+                21: Goods vehicle (7.5 tonnes mgw and over) occupant
+                22: Mobility scooter rider
+                23: Electric motorcycle rider or passenger
+                90: Other vehicle occupant
+                97: Motorcycle - unknown cc rider or passenger
+                98: Goods vehicle (unknown weight) occupant
+                99: Unknown vehicle type (self rep only)
+                103: Motorcycle - Scooter (1979-1998)
+                104: Motorcycle (1979-1998)
+                105: Motorcycle - Combination (1979-1998)
+                106: Motorcycle over 125cc (1999-2004)
+                108: Taxi (excluding private hire cars) (1979-2004)
+                109: Car (including private hire cars) (1979-2004)
+                110: Minibus/Motor caravan (1979-1998)
+                113: Goods over 3.5 tonnes (1979-1998)
+                -1: Data missing or out of range
+          - name: collision_index
+            description: unique value for each collision. The collision_index combines
+              the collision_year and collision_ref_no to form a unique ID. It can
+              be used to join to Vehicle and Casualty
+          - name: collision_ref_no
+            description: In year id used by the police to reference a collision. It
+              is not unique outside of the year, use collision_index for linking to
+              other years
+          - name: collision_year
+          - name: enhanced_casualty_severity
             description: category introduced where collected in 2023
             meta:
               allowed_values:
@@ -96,21 +143,214 @@ sources:
                 7: Less Serious
                 3: Slight
                 -1: Data missing or out of range
-          - name: number_of_vehicles
-          - name: number_of_casualties
+          - name: lsoa_of_casualty
+            description: 'England and Wales only. See Office for National Statistics
+              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
+          - name: pedestrian_location
+            meta:
+              allowed_values:
+                0: Not a Pedestrian
+                1: Crossing on pedestrian crossing facility
+                2: Crossing in zig-zag approach lines
+                3: Crossing in zig-zag exit lines
+                4: Crossing elsewhere within 50m. of pedestrian crossing
+                5: In carriageway, crossing elsewhere
+                6: On footway or verge
+                7: On refuge, central island or central reservation
+                8: In centre of carriageway - not on refuge, island or central reservation
+                9: In carriageway, not crossing
+                10: Unknown or other
+                -1: Data missing or out of range
+          - name: pedestrian_movement
+            meta:
+              allowed_values:
+                0: Not a Pedestrian
+                1: Crossing from driver's nearside
+                2: Crossing from nearside - masked by parked or stationary vehicle
+                3: Crossing from driver's offside
+                4: Crossing from offside - masked by  parked or stationary vehicle
+                5: In carriageway, stationary - not crossing  (standing or playing)
+                6: In carriageway, stationary - not crossing  (standing or playing)
+                  - masked by parked or stationary vehicle
+                7: Walking along in carriageway, facing traffic
+                8: Walking along in carriageway, back to traffic
+                9: Unknown or other
+                -1: Data missing or out of range
+          - name: pedestrian_road_maintenance_worker
+            meta:
+              allowed_values:
+                0: No / Not applicable
+                1: 'Yes'
+                2: Not Known
+                3: Probable
+                -1: Data missing or out of range
+          - name: sex_of_casualty
+            meta:
+              allowed_values:
+                1: Male
+                2: Female
+                9: unknown (self reported)
+                -1: Data missing or out of range
+          - name: vehicle_reference
+            description: unique value for each vehicle in a singular accident. Can
+              be used to join a Casualty to a vehicle
+      - name: collision
+        columns:
+          - name: carriageway_hazards
+            description: New field added with the 2024 data - data collected in or
+              converted to the 2024 STATS19 specification
+            meta:
+              allowed_values:
+                12: Permanent road signing or markings defective or obscured or inadequate
+                13: Roadworks
+                14: Oil or diesel
+                15: Mud
+                16: Dislodged vehicle load in carriageway
+                17: Other object in carriageway
+                18: Involvement with previous collision
+                19: Pedestrian in carriageway - not injured
+                20: Any animal in carriageway (except ridden horse)
+                21: Poor or defective road surface
+                -1: Data missing or out of range
+                99: unknown (self reported)
+                11: Defective traffic signals
+          - name: carriageway_hazards_historic
+            description: data collected in the 2011 STATS19 specification (or earlier)
+            meta:
+              allowed_values:
+                9: unknown (self reported)
+                -1: Data missing or out of range
+                4: Dog on road
+                5: Other animal on road
+                2: Other object on road
+                1: Vehicle load on road
+                6: Pedestrian in carriageway - not injured
+                7: Any animal in carriageway (except ridden horse)
+                3: Previous accident
+          - name: collision_adjusted_serious
+          - name: collision_adjusted_slight
+          - name: collision_index
+            description: unique value for each collision. The collision_index combines
+              the collision_year and collision_ref_no to form a unique ID. It can
+              be used to join to Vehicle and Casualty
+          - name: collision_injury_based
+            meta:
+              allowed_values:
+                0: Based on severity reporting
+                1: Based on Injury code reporting
+          - name: collision_ref_no
+            description: In year id used by the police to reference a collision. It
+              is not unique outside of the year, use collision_index for linking to
+              other years
+          - name: collision_severity
+            meta:
+              allowed_values:
+                1: Fatal
+                3: Slight
+                2: Serious
+          - name: collision_year
           - name: date
           - name: day_of_week
             meta:
               allowed_values:
-                1: Sunday
-                2: Monday
-                3: Tuesday
-                4: Wednesday
-                5: Thursday
-                6: Friday
                 7: Saturday
-          - name: time
+                6: Friday
+                5: Thursday
+                4: Wednesday
+                3: Tuesday
+                2: Monday
+                1: Sunday
+          - name: did_police_officer_attend_scene_of_accident
+            meta:
+              allowed_values:
+                3: No - accident was reported using a self completion  form (self
+                  rep only)
+                2: 'No'
+                1: 'Yes'
+                -1: Data missing or out of range
+          - name: did_police_officer_attend_scene_of_collision
+            meta:
+              allowed_values:
+                2: 'No'
+                1: 'Yes'
+                -1: Data missing or out of range
+                3: No - accident was reported using a self completion  form (self
+                  rep only)
+          - name: enhanced_collision_severity
+            description: category introduced where collected in 2023
+            meta:
+              allowed_values:
+                -1: Data missing or out of range
+                3: Slight
+                7: Less Serious
+                6: Moderately Serious
+                5: Very Serious
+                1: Fatal
+          - name: first_road_class
+            meta:
+              allowed_values:
+                2: A(M)
+                3: A
+                4: B
+                5: C
+                6: Unclassified
+                -1: Data missing or out of range
+                1: Motorway
+          - name: first_road_number
+            meta:
+              allowed_values:
+                1 to 9999: Number range
+                -1: Unknown
+                0: first_road_class is C or Unclassified. These roads do not have
+                  official numbers so recorded as zero
+          - name: junction_control
+            meta:
+              allowed_values:
+                9: unknown (self reported)
+                0: Not at junction or within 20 metres
+                -1: Data missing or out of range
+                4: Give way or uncontrolled
+                3: Stop sign
+                2: Auto traffic signal
+                1: Authorised person
+          - name: junction_detail
+            description: New field added with the 2024 data - data collected in or
+              converted to the 2024 STATS19 specification
+            meta:
+              allowed_values:
+                99: unknown (self reported)
+                -1: Data missing or out of range
+                0: Not at junction or within 20 metres
+                13: T or staggered junction
+                16: Crossroads
+                17: Junction with more than four arms (not roundabout)
+                18: Using private drive or entrance
+          - name: junction_detail_historic
+            description: data collected in the 2011 STATS19 specification (or earlier)
+            meta:
+              allowed_values:
+                0: Not at junction or within 20 metres
+                1: Roundabout
+                2: Mini-roundabout
+                3: T or staggered junction
+                5: Slip road
+                7: More than 4 arms (not roundabout)
+                8: Private drive or entrance
+                9: Other junction
+                99: unknown (self reported)
+                -1: Data missing or out of range
+                6: Crossroads
+          - name: latitude
             description: Null if not known
+          - name: light_conditions
+            meta:
+              allowed_values:
+                6: Darkness - no lighting
+                4: Darkness - lights lit
+                -1: Data missing or out of range
+                1: Daylight
+                5: Darkness - lights unlit
+                7: Darkness - lighting unknown
           - name: local_authority_district
             meta:
               allowed_values:
@@ -646,6 +886,236 @@ sources:
                 940: West Lothian
                 941: Western Isles
                 -1: Code deprecated
+          - name: local_authority_highway
+            meta:
+              allowed_values:
+                E06000001: Hartlepool
+                E06000002: Middlesbrough
+                E06000003: Redcar and Cleveland
+                E06000004: Stockton-on-Tees
+                E06000005: Darlington
+                E06000006: Halton
+                E06000007: Warrington
+                E06000008: Blackburn with Darwen
+                E06000009: Blackpool
+                E06000010: Kingston upon Hull, City of
+                E06000011: East Riding of Yorkshire
+                E06000012: North East Lincolnshire
+                E06000013: North Lincolnshire
+                E06000014: York
+                E06000015: Derby
+                E06000016: Leicester
+                E06000017: Rutland
+                E06000018: Nottingham
+                E06000019: Herefordshire, County of
+                E06000020: Telford and Wrekin
+                E06000021: Stoke-on-Trent
+                E06000022: Bath and North East Somerset
+                E06000023: Bristol, City of
+                E06000024: North Somerset
+                E06000025: South Gloucestershire
+                E06000026: Plymouth
+                E06000027: Torbay
+                E06000028: Bournemouth
+                E06000029: Poole
+                E06000030: Swindon
+                E06000031: Peterborough
+                E06000032: Luton
+                E06000033: Southend-on-Sea
+                E06000034: Thurrock
+                E06000035: Medway
+                E06000036: Bracknell Forest
+                E06000037: West Berkshire
+                E06000038: Reading
+                E06000039: Slough
+                E06000040: Windsor and Maidenhead
+                E06000041: Wokingham
+                E06000042: Milton Keynes
+                E06000043: Brighton and Hove
+                E06000044: Portsmouth
+                E06000045: Southampton
+                E06000046: Isle of Wight
+                E06000047: County Durham
+                E06000048: Northumberland
+                E06000049: Cheshire East
+                E06000050: Cheshire West and Chester
+                E06000051: Shropshire
+                E06000052: Cornwall
+                E06000053: Isles of Scilly
+                E06000054: Wiltshire
+                E06000055: Bedford
+                E06000056: Central Bedfordshire
+                E06000057: Northumberland
+                E06000058: Bournemouth, Christchurch and Poole
+                E06000059: Dorset (excluding Christchurch)
+                E06000060: Buckinghamshire
+                E06000061: North Northamptonshire
+                E06000062: West Northamptonshire
+                E08000001: Bolton
+                E08000002: Bury
+                E08000003: Manchester
+                E08000004: Oldham
+                E08000005: Rochdale
+                E08000006: Salford
+                E08000007: Stockport
+                E08000008: Tameside
+                E08000009: Trafford
+                E08000010: Wigan
+                E08000011: Knowsley
+                E08000012: Liverpool
+                E08000013: St. Helens
+                E08000014: Sefton
+                E08000015: Wirral
+                E08000016: Barnsley
+                E08000017: Doncaster
+                E08000018: Rotherham
+                E08000019: Sheffield
+                E08000020: Gateshead
+                E08000021: Newcastle upon Tyne
+                E08000022: North Tyneside
+                E08000023: South Tyneside
+                E08000024: Sunderland
+                E08000025: Birmingham
+                E08000026: Coventry
+                E08000027: Dudley
+                E08000028: Sandwell
+                E08000029: Solihull
+                E08000030: Walsall
+                E08000031: Wolverhampton
+                E08000032: Bradford
+                E08000033: Calderdale
+                E08000034: Kirklees
+                E08000035: Leeds
+                E08000037: Gateshead
+                E08000036: Wakefield
+                E09000001: City of London
+                E09000002: Barking and Dagenham
+                E09000003: Barnet
+                E09000004: Bexley
+                E09000005: Brent
+                E09000006: Bromley
+                E09000007: Camden
+                E09000008: Croydon
+                E09000009: Ealing
+                E09000010: Enfield
+                E09000011: Greenwich
+                E09000012: Hackney
+                E09000013: Hammersmith and Fulham
+                E09000014: Haringey
+                E09000015: Harrow
+                E09000016: Havering
+                E09000017: Hillingdon
+                E09000018: Hounslow
+                E09000019: Islington
+                E09000020: Kensington and Chelsea
+                E09000021: Kingston upon Thames
+                E09000022: Lambeth
+                E09000023: Lewisham
+                E09000024: Merton
+                E09000025: Newham
+                E09000026: Redbridge
+                E09000027: Richmond upon Thames
+                E09000028: Southwark
+                E09000029: Sutton
+                E09000030: Tower Hamlets
+                E09000031: Waltham Forest
+                E09000032: Wandsworth
+                E09000033: Westminster
+                E10000002: Buckinghamshire
+                E10000003: Cambridgeshire
+                E10000006: Cumbria
+                E10000007: Derbyshire
+                E10000008: Devon
+                E10000009: Dorset
+                E10000011: East Sussex
+                E10000012: Essex
+                E10000013: Gloucestershire
+                E10000014: Hampshire
+                E10000015: Hertfordshire
+                E10000016: Kent
+                E10000017: Lancashire
+                E10000018: Leicestershire
+                E10000019: Lincolnshire
+                E10000020: Norfolk
+                E10000021: Northamptonshire
+                E10000023: North Yorkshire
+                E10000024: Nottinghamshire
+                E10000025: Oxfordshire
+                E10000027: Somerset
+                E10000028: Staffordshire
+                E10000029: Suffolk
+                E10000030: Surrey
+                E10000031: Warwickshire
+                E10000032: West Sussex
+                E10000034: Worcestershire
+                EHEATHROW: London Airport (Heathrow)
+                S12000005: Clackmannanshire
+                S12000006: Dumfries & Galloway
+                S12000008: East Ayrshire
+                S12000009: East Dunbartonshire
+                S12000010: East Lothian
+                S12000011: East Renfrewshire
+                S12000013: Na h-Eileanan an Iar (Western Isles)
+                S12000014: Falkirk
+                S12000015: Fife
+                S12000017: Highland
+                S12000018: Inverclyde
+                S12000019: Midlothian
+                S12000020: Moray
+                S12000021: North Ayrshire
+                S12000023: Orkney Islands
+                S12000024: Perth and Kinross
+                S12000026: Scottish Borders
+                S12000027: Shetland Islands
+                S12000028: South Ayrshire
+                S12000029: South Lanarkshire
+                S12000030: Stirling
+                S12000033: Aberdeen City
+                S12000034: Aberdeenshire
+                S12000035: Argyll & Bute
+                S12000036: Edinburgh, City of
+                S12000038: Renfrewshire
+                S12000039: West Dunbartonshire
+                S12000040: West Lothian
+                S12000041: Angus
+                S12000042: Dundee City
+                S12000043: Glasgow City
+                S12000044: North Lanarkshire
+                S12000045: East Dunbartonshire
+                S12000047: Fife
+                S12000048: Perth and Kinross
+                S12000049: Glasgow City
+                S12000050: North Lanarkshire
+                W06000001: Isle of Anglesey
+                W06000002: Gwynedd
+                W06000003: Conwy
+                W06000004: Denbighshire
+                W06000005: Flintshire
+                W06000006: Wrexham
+                W06000008: Ceredigion
+                W06000009: Pembrokeshire
+                W06000010: Carmarthenshire
+                W06000011: Swansea
+                W06000012: Neath Port Talbot
+                W06000013: Bridgend
+                W06000014: The Vale of Glamorgan
+                W06000015: Cardiff
+                W06000016: Rhondda, Cynon, Taff
+                W06000018: Caerphilly
+                W06000019: Blaenau Gwent
+                W06000020: Torfaen
+                W06000021: Monmouthshire
+                W06000022: Newport
+                W06000023: Powys
+                W06000024: Merthyr Tydfil
+                -1: Record predates use of local_authority_highway codes
+          - name: local_authority_highway_current
+            description: Field introdcued with 2024 data and maps all collisions to
+              the lastest ONS boundaries (back to 2004) based on the recorded collision
+              location
+            meta:
+              allowed_values:
+                See latest ONS code list: https://geoportal.statistics.gov.uk/search?q=NAC_CTYUA&sort=Date%20Created%7Ccreated%7Cdesc
           - name: local_authority_ons_district
             meta:
               allowed_values:
@@ -1071,327 +1541,35 @@ sources:
                 W06000023: Powys
                 W06000024: Merthyr Tydfil
                 -1: Record predates use of local_authority_ons_district
-          - name: local_authority_highway
-            meta:
-              allowed_values:
-                E06000001: Hartlepool
-                E06000002: Middlesbrough
-                E06000003: Redcar and Cleveland
-                E06000004: Stockton-on-Tees
-                E06000005: Darlington
-                E06000006: Halton
-                E06000007: Warrington
-                E06000008: Blackburn with Darwen
-                E06000009: Blackpool
-                E06000010: Kingston upon Hull, City of
-                E06000011: East Riding of Yorkshire
-                E06000012: North East Lincolnshire
-                E06000013: North Lincolnshire
-                E06000014: York
-                E06000015: Derby
-                E06000016: Leicester
-                E06000017: Rutland
-                E06000018: Nottingham
-                E06000019: Herefordshire, County of
-                E06000020: Telford and Wrekin
-                E06000021: Stoke-on-Trent
-                E06000022: Bath and North East Somerset
-                E06000023: Bristol, City of
-                E06000024: North Somerset
-                E06000025: South Gloucestershire
-                E06000026: Plymouth
-                E06000027: Torbay
-                E06000028: Bournemouth
-                E06000029: Poole
-                E06000030: Swindon
-                E06000031: Peterborough
-                E06000032: Luton
-                E06000033: Southend-on-Sea
-                E06000034: Thurrock
-                E06000035: Medway
-                E06000036: Bracknell Forest
-                E06000037: West Berkshire
-                E06000038: Reading
-                E06000039: Slough
-                E06000040: Windsor and Maidenhead
-                E06000041: Wokingham
-                E06000042: Milton Keynes
-                E06000043: Brighton and Hove
-                E06000044: Portsmouth
-                E06000045: Southampton
-                E06000046: Isle of Wight
-                E06000047: County Durham
-                E06000048: Northumberland
-                E06000049: Cheshire East
-                E06000050: Cheshire West and Chester
-                E06000051: Shropshire
-                E06000052: Cornwall
-                E06000053: Isles of Scilly
-                E06000054: Wiltshire
-                E06000055: Bedford
-                E06000056: Central Bedfordshire
-                E06000057: Northumberland
-                E06000058: Bournemouth, Christchurch and Poole
-                E06000059: Dorset (excluding Christchurch)
-                E06000060: Buckinghamshire
-                E06000061: North Northamptonshire
-                E06000062: West Northamptonshire
-                E08000001: Bolton
-                E08000002: Bury
-                E08000003: Manchester
-                E08000004: Oldham
-                E08000005: Rochdale
-                E08000006: Salford
-                E08000007: Stockport
-                E08000008: Tameside
-                E08000009: Trafford
-                E08000010: Wigan
-                E08000011: Knowsley
-                E08000012: Liverpool
-                E08000013: St. Helens
-                E08000014: Sefton
-                E08000015: Wirral
-                E08000016: Barnsley
-                E08000017: Doncaster
-                E08000018: Rotherham
-                E08000019: Sheffield
-                E08000020: Gateshead
-                E08000021: Newcastle upon Tyne
-                E08000022: North Tyneside
-                E08000023: South Tyneside
-                E08000024: Sunderland
-                E08000025: Birmingham
-                E08000026: Coventry
-                E08000027: Dudley
-                E08000028: Sandwell
-                E08000029: Solihull
-                E08000030: Walsall
-                E08000031: Wolverhampton
-                E08000032: Bradford
-                E08000033: Calderdale
-                E08000034: Kirklees
-                E08000035: Leeds
-                E08000037: Gateshead
-                E08000036: Wakefield
-                E09000001: City of London
-                E09000002: Barking and Dagenham
-                E09000003: Barnet
-                E09000004: Bexley
-                E09000005: Brent
-                E09000006: Bromley
-                E09000007: Camden
-                E09000008: Croydon
-                E09000009: Ealing
-                E09000010: Enfield
-                E09000011: Greenwich
-                E09000012: Hackney
-                E09000013: Hammersmith and Fulham
-                E09000014: Haringey
-                E09000015: Harrow
-                E09000016: Havering
-                E09000017: Hillingdon
-                E09000018: Hounslow
-                E09000019: Islington
-                E09000020: Kensington and Chelsea
-                E09000021: Kingston upon Thames
-                E09000022: Lambeth
-                E09000023: Lewisham
-                E09000024: Merton
-                E09000025: Newham
-                E09000026: Redbridge
-                E09000027: Richmond upon Thames
-                E09000028: Southwark
-                E09000029: Sutton
-                E09000030: Tower Hamlets
-                E09000031: Waltham Forest
-                E09000032: Wandsworth
-                E09000033: Westminster
-                E10000002: Buckinghamshire
-                E10000003: Cambridgeshire
-                E10000006: Cumbria
-                E10000007: Derbyshire
-                E10000008: Devon
-                E10000009: Dorset
-                E10000011: East Sussex
-                E10000012: Essex
-                E10000013: Gloucestershire
-                E10000014: Hampshire
-                E10000015: Hertfordshire
-                E10000016: Kent
-                E10000017: Lancashire
-                E10000018: Leicestershire
-                E10000019: Lincolnshire
-                E10000020: Norfolk
-                E10000021: Northamptonshire
-                E10000023: North Yorkshire
-                E10000024: Nottinghamshire
-                E10000025: Oxfordshire
-                E10000027: Somerset
-                E10000028: Staffordshire
-                E10000029: Suffolk
-                E10000030: Surrey
-                E10000031: Warwickshire
-                E10000032: West Sussex
-                E10000034: Worcestershire
-                EHEATHROW: London Airport (Heathrow)
-                S12000005: Clackmannanshire
-                S12000006: Dumfries & Galloway
-                S12000008: East Ayrshire
-                S12000009: East Dunbartonshire
-                S12000010: East Lothian
-                S12000011: East Renfrewshire
-                S12000013: Na h-Eileanan an Iar (Western Isles)
-                S12000014: Falkirk
-                S12000015: Fife
-                S12000017: Highland
-                S12000018: Inverclyde
-                S12000019: Midlothian
-                S12000020: Moray
-                S12000021: North Ayrshire
-                S12000023: Orkney Islands
-                S12000024: Perth and Kinross
-                S12000026: Scottish Borders
-                S12000027: Shetland Islands
-                S12000028: South Ayrshire
-                S12000029: South Lanarkshire
-                S12000030: Stirling
-                S12000033: Aberdeen City
-                S12000034: Aberdeenshire
-                S12000035: Argyll & Bute
-                S12000036: Edinburgh, City of
-                S12000038: Renfrewshire
-                S12000039: West Dunbartonshire
-                S12000040: West Lothian
-                S12000041: Angus
-                S12000042: Dundee City
-                S12000043: Glasgow City
-                S12000044: North Lanarkshire
-                S12000045: East Dunbartonshire
-                S12000047: Fife
-                S12000048: Perth and Kinross
-                S12000049: Glasgow City
-                S12000050: North Lanarkshire
-                W06000001: Isle of Anglesey
-                W06000002: Gwynedd
-                W06000003: Conwy
-                W06000004: Denbighshire
-                W06000005: Flintshire
-                W06000006: Wrexham
-                W06000008: Ceredigion
-                W06000009: Pembrokeshire
-                W06000010: Carmarthenshire
-                W06000011: Swansea
-                W06000012: Neath Port Talbot
-                W06000013: Bridgend
-                W06000014: The Vale of Glamorgan
-                W06000015: Cardiff
-                W06000016: Rhondda, Cynon, Taff
-                W06000018: Caerphilly
-                W06000019: Blaenau Gwent
-                W06000020: Torfaen
-                W06000021: Monmouthshire
-                W06000022: Newport
-                W06000023: Powys
-                W06000024: Merthyr Tydfil
-                -1: Record predates use of local_authority_highway codes
-          - name: local_authority_highway_current
-            description: Field introdcued with 2024 data and maps all collisions to
-              the lastest ONS boundaries (back to 2004) based on the recorded collision
-              location
-            meta:
-              allowed_values:
-                See latest ONS code list: https://geoportal.statistics.gov.uk/search?q=NAC_CTYUA&sort=Date%20Created%7Ccreated%7Cdesc
-          - name: first_road_class
-            meta:
-              allowed_values:
-                1: Motorway
-                2: A(M)
-                3: A
-                4: B
-                5: C
-                6: Unclassified
-                -1: Data missing or out of range
-          - name: first_road_number
-            meta:
-              allowed_values:
-                1 to 9999: Number range
-                -1: Unknown
-                0: first_road_class is C or Unclassified. These roads do not have
-                  official numbers so recorded as zero
-          - name: road_type
-            meta:
-              allowed_values:
-                1: Roundabout
-                2: One way street
-                3: Dual carriageway
-                6: Single carriageway
-                7: Slip road
-                9: Unknown
-                12: One way street/Slip road
-                -1: Data missing or out of range
-          - name: speed_limit
-            description: 20,30,40,50,60,70 are the only valid speed limits on public
-              highways
-            meta:
-              allowed_values:
-                -1: Data missing or out of range
-                99: unknown (self reported)
-          - name: junction_detail_historic
-            description: data collected in the 2011 STATS19 specification (or earlier)
-            meta:
-              allowed_values:
-                0: Not at junction or within 20 metres
-                1: Roundabout
-                2: Mini-roundabout
-                3: T or staggered junction
-                5: Slip road
-                6: Crossroads
-                7: More than 4 arms (not roundabout)
-                8: Private drive or entrance
-                9: Other junction
-                99: unknown (self reported)
-                -1: Data missing or out of range
-          - name: junction_detail
+          - name: location_easting_osgr
+            description: Null if not known
+          - name: location_northing_osgr
+            description: Null if not known
+          - name: longitude
+            description: Null if not known
+          - name: lsoa_of_accident_location
+            description: 'England and Wales only. See Office for National Statistics
+              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
+          - name: lsoa_of_collision_location
+            description: 'England and Wales only. See Office for National Statistics
+              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
+          - name: number_of_casualties
+          - name: number_of_vehicles
+          - name: pedestrian_crossing
             description: New field added with the 2024 data - data collected in or
               converted to the 2024 STATS19 specification
             meta:
               allowed_values:
-                0: Not at junction or within 20 metres
-                13: T or staggered junction
-                16: Crossroads
-                17: Junction with more than four arms (not roundabout)
-                18: Using private drive or entrance
+                15: Pedestrian phase at traffic signal
                 99: unknown (self reported)
+                16: Footbridge or subway
+                17: Central refuge - no other controls
                 -1: Data missing or out of range
-          - name: junction_control
-            meta:
-              allowed_values:
-                0: Not at junction or within 20 metres
-                1: Authorised person
-                2: Auto traffic signal
-                3: Stop sign
-                4: Give way or uncontrolled
-                -1: Data missing or out of range
-                9: unknown (self reported)
-          - name: second_road_class
-            meta:
-              allowed_values:
-                0: Not at junction or within 20 metres
-                1: Motorway
-                2: A(M)
-                3: A
-                4: B
-                5: C
-                6: Unclassified
-                9: Unknown (self rep only)
-                -1: Data missing or out of range
-          - name: second_road_number
-            meta:
-              allowed_values:
-                1 to 9999: Number range
-                -1: Unknown
-                0: first_road_class is C or Unclassified. These roads do not have
-                  official numbers so recorded as zero
+                0: No physical crossing facility within 50m
+                11: Human crossing control by school crossing patrol
+                12: Human crossing control by other authorised person
+                13: Zebra crossing
+                14: Pedestrian light crossing (pelican or puffin or toucan or similar)
           - name: pedestrian_crossing_human_control_historic
             description: data collected in the 2011 STATS19 specification (or earlier)
             meta:
@@ -1405,6 +1583,7 @@ sources:
             description: data collected in the 2011 STATS19 specification (or earlier)
             meta:
               allowed_values:
+                -1: Data missing or out of range
                 0: No physical crossing facilities within 50 metres
                 1: Zebra
                 4: Pelican, puffin, toucan or similar non-junction pedestrian light
@@ -1412,60 +1591,108 @@ sources:
                 5: Pedestrian phase at traffic signal junction
                 7: Footbridge or subway
                 8: Central refuge
-                -1: Data missing or out of range
                 9: unknown (self reported)
-          - name: pedestrian_crossing
-            description: New field added with the 2024 data - data collected in or
-              converted to the 2024 STATS19 specification
+          - name: police_force
             meta:
               allowed_values:
-                0: No physical crossing facility within 50m
-                11: Human crossing control by school crossing patrol
-                12: Human crossing control by other authorised person
-                13: Zebra crossing
-                14: Pedestrian light crossing (pelican or puffin or toucan or similar)
-                15: Pedestrian phase at traffic signal
-                16: Footbridge or subway
-                17: Central refuge - no other controls
-                99: unknown (self reported)
-                -1: Data missing or out of range
-          - name: light_conditions
-            meta:
-              allowed_values:
-                1: Daylight
-                4: Darkness - lights lit
-                5: Darkness - lights unlit
-                6: Darkness - no lighting
-                7: Darkness - lighting unknown
-                -1: Data missing or out of range
-          - name: weather_conditions
-            meta:
-              allowed_values:
-                1: Fine no high winds
-                2: Raining no high winds
-                3: Snowing no high winds
-                4: Fine + high winds
-                5: Raining + high winds
-                6: Snowing + high winds
-                7: Fog or mist
-                8: Other
-                9: Unknown
-                -1: Data missing or out of range
+                47: Sussex
+                1: Metropolitan Police
+                33: Leicestershire
+                34: Northamptonshire
+                35: Cambridgeshire
+                36: Norfolk
+                37: Suffolk
+                40: Bedfordshire
+                41: Hertfordshire
+                42: Essex
+                43: Thames Valley
+                44: Hampshire
+                45: Surrey
+                46: Kent
+                48: City of London
+                50: Devon and Cornwall
+                52: Avon and Somerset
+                53: Gloucestershire
+                54: Wiltshire
+                55: Dorset
+                60: North Wales
+                61: Gwent
+                62: South Wales
+                63: Dyfed-Powys
+                91: Northern
+                92: Grampian
+                93: Tayside
+                94: Fife
+                95: Lothian and Borders
+                96: Central
+                97: Strathclyde
+                98: Dumfries and Galloway
+                99: Police Scotland
+                3: Cumbria
+                31: Nottinghamshire
+                30: Derbyshire
+                23: Warwickshire
+                22: West Mercia
+                21: Staffordshire
+                20: West Midlands
+                17: Cleveland
+                16: Humberside
+                14: South Yorkshire
+                13: West Yorkshire
+                12: North Yorkshire
+                11: Durham
+                10: Northumbria
+                7: Cheshire
+                6: Greater Manchester
+                5: Merseyside
+                4: Lancashire
+                32: Lincolnshire
           - name: road_surface_conditions
             meta:
               allowed_values:
-                1: Dry
-                2: Wet or damp
-                3: Snow
-                4: Frost or ice
-                5: Flood over 3cm. deep
-                6: Oil or diesel
-                7: Mud
-                -1: Data missing or out of range
                 9: unknown (self reported)
+                -1: Data missing or out of range
+                7: Mud
+                6: Oil or diesel
+                5: Flood over 3cm. deep
+                4: Frost or ice
+                3: Snow
+                2: Wet or damp
+                1: Dry
+          - name: road_type
+            meta:
+              allowed_values:
+                2: One way street
+                12: One way street/Slip road
+                9: Unknown
+                7: Slip road
+                6: Single carriageway
+                3: Dual carriageway
+                1: Roundabout
+                -1: Data missing or out of range
+          - name: second_road_class
+            meta:
+              allowed_values:
+                -1: Data missing or out of range
+                2: A(M)
+                0: Not at junction or within 20 metres
+                1: Motorway
+                3: A
+                9: Unknown (self rep only)
+                6: Unclassified
+                5: C
+                4: B
+          - name: second_road_number
+            meta:
+              allowed_values:
+                0: first_road_class is C or Unclassified. These roads do not have
+                  official numbers so recorded as zero
+                -1: Unknown
+                1 to 9999: Number range
           - name: special_conditions_at_site
             meta:
               allowed_values:
+                9: unknown (self reported)
                 1: Auto traffic signal - out
                 2: Auto signal part defective
                 3: Road sign or marking defective or obscured
@@ -1474,190 +1701,264 @@ sources:
                 6: Oil or diesel
                 7: Mud
                 -1: Data missing or out of range
-                9: unknown (self reported)
-          - name: carriageway_hazards_historic
-            description: data collected in the 2011 STATS19 specification (or earlier)
+          - name: speed_limit
+            description: 20,30,40,50,60,70 are the only valid speed limits on public
+              highways
             meta:
               allowed_values:
-                1: Vehicle load on road
-                2: Other object on road
-                3: Previous accident
-                4: Dog on road
-                5: Other animal on road
-                6: Pedestrian in carriageway - not injured
-                7: Any animal in carriageway (except ridden horse)
-                -1: Data missing or out of range
-                9: unknown (self reported)
-          - name: carriageway_hazards
-            description: New field added with the 2024 data - data collected in or
-              converted to the 2024 STATS19 specification
-            meta:
-              allowed_values:
-                11: Defective traffic signals
-                12: Permanent road signing or markings defective or obscured or inadequate
-                13: Roadworks
-                14: Oil or diesel
-                15: Mud
-                16: Dislodged vehicle load in carriageway
-                17: Other object in carriageway
-                18: Involvement with previous collision
-                19: Pedestrian in carriageway - not injured
-                20: Any animal in carriageway (except ridden horse)
-                21: Poor or defective road surface
-                -1: Data missing or out of range
                 99: unknown (self reported)
+                -1: Data missing or out of range
+          - name: time
+            description: Null if not known
+          - name: trunk_road_flag
+            meta:
+              allowed_values:
+                2: Non-trunk
+                -1: Data missing or out of range
+                1: Trunk (Roads managed by Highways England)
           - name: urban_or_rural_area
             description: field introduced in 1994
             meta:
               allowed_values:
                 1: Urban
                 2: Rural
+                -1: Data missing or out of range
                 3: Unallocated
-                -1: Data missing or out of range
-          - name: did_police_officer_attend_scene_of_collision
+          - name: weather_conditions
             meta:
               allowed_values:
-                1: 'Yes'
-                2: 'No'
-                3: No - accident was reported using a self completion  form (self
-                  rep only)
+                9: Unknown
                 -1: Data missing or out of range
-          - name: did_police_officer_attend_scene_of_accident
-            meta:
-              allowed_values:
-                1: 'Yes'
-                2: 'No'
-                3: No - accident was reported using a self completion  form (self
-                  rep only)
-                -1: Data missing or out of range
-          - name: trunk_road_flag
-            meta:
-              allowed_values:
-                1: Trunk (Roads managed by Highways England)
-                2: Non-trunk
-                -1: Data missing or out of range
-          - name: lsoa_of_collision_location
-            description: 'England and Wales only. See Office for National Statistics
-              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
-          - name: lsoa_of_accident_location
-            description: 'England and Wales only. See Office for National Statistics
-              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
-          - name: collision_injury_based
-            meta:
-              allowed_values:
-                0: Based on severity reporting
-                1: Based on Injury code reporting
-          - name: collision_adjusted_serious
-          - name: collision_adjusted_slight
-      - name: vehicle
-        meta:
-          external_location: "data/complete_dataset/dft-road-casualty-statistics-vehicle-1979-latest-published-year.csv"
+                1: Fine no high winds
+                2: Raining no high winds
+                3: Snowing no high winds
+                7: Fog or mist
+                8: Other
+                4: Fine + high winds
+                5: Raining + high winds
+                6: Snowing + high winds
+      - name: historical_revisions
         columns:
+          - name: accident_index
+            description: unique value for each accident. The accident_index combines
+              the accident_year and accident_ref_no to form a unique ID. It can be
+              used to join to Vehicle and Casualty
+          - name: accident_ref_no
+            description: In year id used by the police to reference a collision. It
+              is not unique outside of the year, use accident_index for linking to
+              other years
+          - name: accident_year
+          - name: casualty_reference
+            description: unique value for each casualty in a singular accident (historical
+              years may be unique to a singular vehicle in a road accident)
+          - name: effective_date_of_change
+            description: Date the change was made
+          - name: police_force
+            description: (See above)
+          - name: previously_published_value
+          - name: replacement_value
+          - name: variable
+            description: (See police_force values in accident listings for values)
+          - name: vehicle_reference
+            description: unique value for each vehicle in a singular accident. Can
+              be used to join a Casualty to a vehicle
+      - name: vehicle
+        columns:
+          - name: age_band_of_driver
+            meta:
+              allowed_values:
+                1: 0 - 5
+                -1: Data missing or out of range
+                11: Over 75
+                10: 66 - 75
+                9: 56 - 65
+                8: 46 - 55
+                7: 36 - 45
+                6: 26 - 35
+                5: 21 - 25
+                4: 16 - 20
+                3: 11 - 15
+                2: 6 - 10
+          - name: age_of_driver
+            meta:
+              allowed_values:
+                -1: Data missing or out of range
+          - name: age_of_vehicle
           - name: collision_index
             description: unique value for each collision. The collision_index combines
               the collision_year and collision_ref_no to form a unique ID. It can
               be used to join to Vehicle and Casualty
-          - name: collision_year
           - name: collision_ref_no
             description: In year id used by the police to reference a collision. It
               is not unique outside of the year, use collision_index for linking to
               other years
-          - name: vehicle_reference
-            description: unique value for each vehicle in a singular accident. Can
-              be used to join a Casualty to a vehicle
-          - name: vehicle_type
-            description: category introduced in 1999 specification
+          - name: collision_year
+          - name: driver_distance_banding
+            description: field introduced in 2023
             meta:
               allowed_values:
-                1: Pedal cycle
-                2: Motorcycle 50cc and under
-                3: Motorcycle 125cc and under
-                4: Motorcycle over 125cc and up to 500cc
-                5: Motorcycle over 500cc
-                8: Taxi/Private hire car
-                9: Car
-                10: Minibus (8 - 16 passenger seats)
-                11: Bus or coach (17 or more pass seats)
-                16: Ridden horse
-                17: Agricultural vehicle
-                18: Tram
-                19: Van / Goods 3.5 tonnes mgw or under
-                20: Goods over 3.5t. and under 7.5t
-                21: Goods 7.5 tonnes mgw and over
-                22: Mobility scooter
-                23: Electric motorcycle
-                90: Other vehicle
-                97: Motorcycle - unknown cc
-                98: Goods vehicle - unknown weight
-                99: Unknown vehicle type (self rep only)
-                103: Motorcycle - Scooter (1979-1998)
-                104: Motorcycle (1979-1998)
-                105: Motorcycle - Combination (1979-1998)
-                106: Motorcycle over 125cc (1999-2004)
-                108: Taxi (excluding private hire cars) (1979-2004)
-                109: Car (including private hire cars) (1979-2004)
-                110: Minibus/Motor caravan (1979-1998)
-                113: Goods over 3.5 tonnes (1979-1998)
+                1: Collision occurred within 5km of drivers home postcode
+                5: Collision occurred over 100km of drivers home postcode
+                4: Collision occurred between 20.001 and 100km of drivers home postcode
+                3: Collision occurred between 10.001 and 20km of drivers home postcode
+                2: Collision occurred between 5.001 and 10km of drivers home postcode
+          - name: driver_imd_decile
+            description: field introduced in 2016
+            meta:
+              allowed_values:
+                3: More deprived 20-30%
+                7: Less deprived 30-40%
+                1: Most deprived 10%
                 -1: Data missing or out of range
-          - name: towing_and_articulation
+                10: Least deprived 10%
+                9: Less deprived 10-20%
+                8: Less deprived 20-30%
+                2: More deprived 10-20%
+                6: Less deprived 40-50%
+                5: More deprived 40-50%
+                4: More deprived 30-40%
+          - name: engine_capacity_cc
             meta:
               allowed_values:
-                0: No tow/articulation
-                1: Articulated vehicle
-                2: Double or multiple trailer
-                3: Caravan
-                4: Single trailer
-                5: Other tow
+                -1: Data missing or out of range
+          - name: escooter_flag
+            description: field introduced in 2023
+            meta:
+              allowed_values:
+                0: Vehicle was not an e-scooter
+                1: Vehicle was an e-scooter
+          - name: first_point_of_impact
+            meta:
+              allowed_values:
+                0: Did not impact
+                -1: Data missing or out of range
                 9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: vehicle_manoeuvre_historic
-            description: data collected in the 2011 STATS19 specification (or earlier)
+                4: Nearside
+                3: Offside
+                2: Back
+                1: Front
+          - name: generic_make_model
+            description: field introduced in 2020
             meta:
               allowed_values:
-                1: Reversing
-                2: Parked
-                3: Waiting to go - held up
-                4: Slowing or stopping
-                5: Moving off
-                6: U-turn
-                7: Turning left
-                8: Waiting to turn left
-                9: Turning right
-                10: Waiting to turn right
-                11: Changing lane to left
-                12: Changing lane to right
-                13: Overtaking moving vehicle - offside
-                14: Overtaking static vehicle - offside
-                15: Overtaking - nearside
-                16: Going ahead left-hand bend
-                17: Going ahead right-hand bend
-                18: Going ahead other
+                -1: Data missing or out of range
+          - name: hit_object_in_carriageway
+            meta:
+              allowed_values:
+                1: Previous accident
+                11: Other object
+                12: Any animal (except ridden horse)
                 99: unknown (self reported)
                 -1: Data missing or out of range
-          - name: vehicle_manoeuvre
+                9: Central island of roundabout
+                8: Open door of vehicle
+                7: Bollard or refuge
+                6: Bridge (side)
+                5: Bridge (roof)
+                4: Parked vehicle
+                2: Road works
+                10: Kerb
+          - name: hit_object_off_carriageway
+            meta:
+              allowed_values:
+                1: Road sign or traffic signal
+                3: Telegraph or electricity pole
+                4: Tree
+                5: Bus stop or bus shelter
+                6: Central crash barrier
+                7: Near/Offside crash barrier
+                8: Submerged in water
+                9: Entered ditch
+                10: Other permanent object
+                11: Wall or fence
+                2: Lamp post
+                99: unknown (self reported)
+                -1: Data missing or out of range
+          - name: journey_purpose_of_driver
             description: New field added with the 2024 data - data collected in or
               converted to the 2024 STATS19 specification
             meta:
               allowed_values:
-                1: Reversing
-                2: Parked
-                3: Waiting to go ahead
-                4: Slowing or stopping
-                5: Moving off
-                6: U-turn
-                7: Turning left
-                8: Waiting to turn left
-                9: Turning right
-                10: Waiting to turn right
-                11: Changing lane to left
-                12: Changing lane to right
-                13: Over taking moving vehicle on its offside
-                14: Overtaking stationary vehicle on its offside
-                15: Overtaking on nearside (passengers side nearest kerb)
-                19: Going ahead
-                20: Parking
-                99: unknown (self reported)
+                6: Not known or not requested
+                9: Personal business or leisure
                 -1: Data missing or out of range
+                8: Emergency vehicle (blue light) on response
+                7: Education and educational escort
+                2: Commuting to or from work
+                1: Journey as part of work
+          - name: journey_purpose_of_driver_historic
+            description: data collected in the 2011 STATS19 specification (or earlier)
+            meta:
+              allowed_values:
+                1: Journey as part of work
+                3: Taking pupil to/from school
+                4: Pupil riding to/from school
+                2: Commuting to/from work
+                -1: Data missing or out of range
+                15: Other/Not known
+                6: Not known
+                5: Other
+          - name: junction_location
+            meta:
+              allowed_values:
+                0: Not at or within 20 metres of junction
+                1: Approaching junction or waiting/parked at junction approach
+                2: Cleared junction or waiting/parked at junction exit
+                3: Leaving roundabout
+                4: Entering roundabout
+                5: Leaving main road
+                6: Entering main road
+                7: Entering from slip road
+                8: Mid Junction - on roundabout or on main road
+                9: unknown (self reported)
+                -1: Data missing or out of range
+          - name: lsoa_of_driver
+            description: 'England and Wales only. See Office for National Statistics
+              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
+          - name: propulsion_code
+            meta:
+              allowed_values:
+                2: Heavy oil
+                1: Petrol
+                3: Electric
+                4: Steam
+                5: Gas
+                6: Petrol/Gas (LPG)
+                7: Gas/Bi-fuel
+                8: Hybrid electric
+                9: Gas Diesel
+                10: New fuel technology
+                11: Fuel cells
+                -1: Undefined
+                12: Electric diesel
+          - name: sex_of_driver
+            meta:
+              allowed_values:
+                -1: Data missing or out of range
+                3: Not known
+                1: Male
+                2: Female
+          - name: skidding_and_overturning
+            meta:
+              allowed_values:
+                2: Skidded and overturned
+                3: Jackknifed
+                5: Overturned
+                4: Jackknifed and overturned
+                9: unknown (self reported)
+                -1: Data missing or out of range
+                1: Skidded
+          - name: towing_and_articulation
+            meta:
+              allowed_values:
+                0: No tow/articulation
+                -1: Data missing or out of range
+                9: unknown (self reported)
+                5: Other tow
+                4: Single trailer
+                3: Caravan
+                2: Double or multiple trailer
+                1: Articulated vehicle
           - name: vehicle_direction_from
             description: both vehicle_direction_from and vehicle_direction_to should
               be 0
@@ -1690,6 +1991,41 @@ sources:
                 8: North West
                 9: unknown (self reported)
                 -1: Data missing or out of range
+          - name: vehicle_leaving_carriageway
+            meta:
+              allowed_values:
+                -1: Data missing or out of range
+                9: unknown (self reported)
+                8: Offside and rebounded
+                7: Offside
+                6: Offside - crossed central reservation
+                5: Offside on to centrl res + rebounded
+                4: Offside on to central reservation
+                3: Straight ahead at junction
+                1: Nearside
+                0: Did not leave carriageway
+                2: Nearside and rebounded
+          - name: vehicle_left_hand_drive
+            meta:
+              allowed_values:
+                9: Unknown
+                1: 'No'
+                2: 'Yes'
+                -1: Data missing or out of range
+          - name: vehicle_location_restricted_lane
+            description: New field added with the 2024 data - data collected in or
+              converted to the 2024 STATS19 specification
+            meta:
+              allowed_values:
+                0: On main carriageway (not in restricted lane)
+                1: Tram or Light rail track
+                2: Bus lane or Busway
+                4: Cycle lane (on main carriageway)
+                5: Cycleway or shared use footway (not part of main carriageway)
+                6: Lay-by or hard shoulder
+                9: Footway (pavement)
+                99: unknown (self reported)
+                -1: Data missing or out of range
           - name: vehicle_location_restricted_lane_historic
             description: data collected in the 2011 STATS19 specification (or earlier)
             meta:
@@ -1707,435 +2043,87 @@ sources:
                 10: Not on carriageway
                 99: unknown (self reported)
                 -1: Data missing or out of range
-          - name: vehicle_location_restricted_lane
+          - name: vehicle_manoeuvre
             description: New field added with the 2024 data - data collected in or
               converted to the 2024 STATS19 specification
             meta:
               allowed_values:
-                0: On main carriageway (not in restricted lane)
-                1: Tram or Light rail track
-                2: Bus lane or Busway
-                4: Cycle lane (on main carriageway)
-                5: Cycleway or shared use footway (not part of main carriageway)
-                6: Lay-by or hard shoulder
-                9: Footway (pavement)
+                -1: Data missing or out of range
+                1: Reversing
                 99: unknown (self reported)
-                -1: Data missing or out of range
-          - name: junction_location
-            meta:
-              allowed_values:
-                0: Not at or within 20 metres of junction
-                1: Approaching junction or waiting/parked at junction approach
-                2: Cleared junction or waiting/parked at junction exit
-                3: Leaving roundabout
-                4: Entering roundabout
-                5: Leaving main road
-                6: Entering main road
-                7: Entering from slip road
-                8: Mid Junction - on roundabout or on main road
-                9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: skidding_and_overturning
-            meta:
-              allowed_values:
-                1: Skidded
-                2: Skidded and overturned
-                3: Jackknifed
-                4: Jackknifed and overturned
-                5: Overturned
-                9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: hit_object_in_carriageway
-            meta:
-              allowed_values:
-                1: Previous accident
-                2: Road works
-                4: Parked vehicle
-                5: Bridge (roof)
-                6: Bridge (side)
-                7: Bollard or refuge
-                8: Open door of vehicle
-                9: Central island of roundabout
-                10: Kerb
-                11: Other object
-                12: Any animal (except ridden horse)
-                99: unknown (self reported)
-                -1: Data missing or out of range
-          - name: vehicle_leaving_carriageway
-            meta:
-              allowed_values:
-                0: Did not leave carriageway
-                1: Nearside
-                2: Nearside and rebounded
-                3: Straight ahead at junction
-                4: Offside on to central reservation
-                5: Offside on to centrl res + rebounded
-                6: Offside - crossed central reservation
-                7: Offside
-                8: Offside and rebounded
-                9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: hit_object_off_carriageway
-            meta:
-              allowed_values:
-                1: Road sign or traffic signal
-                2: Lamp post
-                3: Telegraph or electricity pole
-                4: Tree
-                5: Bus stop or bus shelter
-                6: Central crash barrier
-                7: Near/Offside crash barrier
-                8: Submerged in water
-                9: Entered ditch
-                10: Other permanent object
-                11: Wall or fence
-                99: unknown (self reported)
-                -1: Data missing or out of range
-          - name: first_point_of_impact
-            meta:
-              allowed_values:
-                0: Did not impact
-                1: Front
-                2: Back
-                3: Offside
-                4: Nearside
-                9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: vehicle_left_hand_drive
-            meta:
-              allowed_values:
-                1: 'No'
-                2: 'Yes'
-                9: Unknown
-                -1: Data missing or out of range
-          - name: journey_purpose_of_driver_historic
+                20: Parking
+                19: Going ahead
+                15: Overtaking on nearside (passengers side nearest kerb)
+                14: Overtaking stationary vehicle on its offside
+                13: Over taking moving vehicle on its offside
+                12: Changing lane to right
+                11: Changing lane to left
+                10: Waiting to turn right
+                9: Turning right
+                8: Waiting to turn left
+                7: Turning left
+                6: U-turn
+                5: Moving off
+                4: Slowing or stopping
+                3: Waiting to go ahead
+                2: Parked
+          - name: vehicle_manoeuvre_historic
             description: data collected in the 2011 STATS19 specification (or earlier)
             meta:
               allowed_values:
-                1: Journey as part of work
-                2: Commuting to/from work
-                3: Taking pupil to/from school
-                4: Pupil riding to/from school
-                5: Other
-                6: Not known
-                15: Other/Not known
+                10: Waiting to turn right
                 -1: Data missing or out of range
-          - name: journey_purpose_of_driver
-            description: New field added with the 2024 data - data collected in or
-              converted to the 2024 STATS19 specification
-            meta:
-              allowed_values:
-                1: Journey as part of work
-                2: Commuting to or from work
-                6: Not known or not requested
-                7: Education and educational escort
-                8: Emergency vehicle (blue light) on response
-                9: Personal business or leisure
-                -1: Data missing or out of range
-          - name: sex_of_driver
-            meta:
-              allowed_values:
-                1: Male
-                2: Female
-                3: Not known
-                -1: Data missing or out of range
-          - name: age_of_driver
-            meta:
-              allowed_values:
-                -1: Data missing or out of range
-          - name: age_band_of_driver
-            meta:
-              allowed_values:
-                1: 0 - 5
-                2: 6 - 10
-                3: 11 - 15
-                4: 16 - 20
-                5: 21 - 25
-                6: 26 - 35
-                7: 36 - 45
-                8: 46 - 55
-                9: 56 - 65
-                10: 66 - 75
-                11: Over 75
-                -1: Data missing or out of range
-          - name: engine_capacity_cc
-            meta:
-              allowed_values:
-                -1: Data missing or out of range
-          - name: propulsion_code
-            meta:
-              allowed_values:
-                1: Petrol
-                2: Heavy oil
-                3: Electric
-                4: Steam
-                5: Gas
-                6: Petrol/Gas (LPG)
-                7: Gas/Bi-fuel
-                8: Hybrid electric
-                9: Gas Diesel
-                10: New fuel technology
-                11: Fuel cells
-                12: Electric diesel
-                -1: Undefined
-          - name: age_of_vehicle
-          - name: generic_make_model
-            description: field introduced in 2020
-            meta:
-              allowed_values:
-                -1: Data missing or out of range
-          - name: driver_imd_decile
-            description: field introduced in 2016
-            meta:
-              allowed_values:
-                1: Most deprived 10%
-                2: More deprived 10-20%
-                3: More deprived 20-30%
-                4: More deprived 30-40%
-                5: More deprived 40-50%
-                6: Less deprived 40-50%
-                7: Less deprived 30-40%
-                8: Less deprived 20-30%
-                9: Less deprived 10-20%
-                10: Least deprived 10%
-                -1: Data missing or out of range
-          - name: lsoa_of_driver
-            description: 'England and Wales only. See Office for National Statistics
-              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
-          - name: escooter_flag
-            description: field introduced in 2023
-            meta:
-              allowed_values:
-                1: Vehicle was an e-scooter
-                0: Vehicle was not an e-scooter
-          - name: driver_distance_banding
-            description: field introduced in 2023
-            meta:
-              allowed_values:
-                1: Collision occurred within 5km of drivers home postcode
-                2: Collision occurred between 5.001 and 10km of drivers home postcode
-                3: Collision occurred between 10.001 and 20km of drivers home postcode
-                4: Collision occurred between 20.001 and 100km of drivers home postcode
-                5: Collision occurred over 100km of drivers home postcode
-      - name: casualty
-        meta:
-          external_location: "data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv"
-        columns:
-          - name: collision_index
-            description: unique value for each collision. The collision_index combines
-              the collision_year and collision_ref_no to form a unique ID. It can
-              be used to join to Vehicle and Casualty
-          - name: collision_year
-          - name: collision_ref_no
-            description: In year id used by the police to reference a collision. It
-              is not unique outside of the year, use collision_index for linking to
-              other years
+                99: unknown (self reported)
+                18: Going ahead other
+                17: Going ahead right-hand bend
+                16: Going ahead left-hand bend
+                15: Overtaking - nearside
+                14: Overtaking static vehicle - offside
+                13: Overtaking moving vehicle - offside
+                12: Changing lane to right
+                11: Changing lane to left
+                1: Reversing
+                2: Parked
+                3: Waiting to go - held up
+                4: Slowing or stopping
+                5: Moving off
+                6: U-turn
+                7: Turning left
+                8: Waiting to turn left
+                9: Turning right
           - name: vehicle_reference
             description: unique value for each vehicle in a singular accident. Can
               be used to join a Casualty to a vehicle
-          - name: casualty_reference
-            description: unique value for each casualty in a singular accident (historical
-              years may be unique to a singular vehicle in a road accident)
-          - name: casualty_class
+          - name: vehicle_type
             meta:
               allowed_values:
-                1: Driver or rider
-                2: Passenger
-                3: Pedestrian
-          - name: sex_of_casualty
-            meta:
-              allowed_values:
-                1: Male
-                2: Female
-                9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: age_of_casualty
-            meta:
-              allowed_values:
-                -1: Data missing or out of range
-          - name: age_band_of_casualty
-            meta:
-              allowed_values:
-                1: 0 - 5
-                2: 6 - 10
-                3: 11 - 15
-                4: 16 - 20
-                5: 21 - 25
-                6: 26 - 35
-                7: 36 - 45
-                8: 46 - 55
-                9: 56 - 65
-                10: 66 - 75
-                11: Over 75
-                -1: Data missing or out of range
-          - name: casualty_severity
-            meta:
-              allowed_values:
-                1: Fatal
-                2: Serious
-                3: Slight
-          - name: enhanced_casualty_severity
-            description: category introduced where collected in 2023
-            meta:
-              allowed_values:
-                1: Fatal
-                5: Very Serious
-                6: Moderately Serious
-                7: Less Serious
-                3: Slight
-                -1: Data missing or out of range
-          - name: pedestrian_location
-            meta:
-              allowed_values:
-                0: Not a Pedestrian
-                1: Crossing on pedestrian crossing facility
-                2: Crossing in zig-zag approach lines
-                3: Crossing in zig-zag exit lines
-                4: Crossing elsewhere within 50m. of pedestrian crossing
-                5: In carriageway, crossing elsewhere
-                6: On footway or verge
-                7: On refuge, central island or central reservation
-                8: In centre of carriageway - not on refuge, island or central reservation
-                9: In carriageway, not crossing
-                10: Unknown or other
-                -1: Data missing or out of range
-          - name: pedestrian_movement
-            meta:
-              allowed_values:
-                0: Not a Pedestrian
-                1: Crossing from driver's nearside
-                2: Crossing from nearside - masked by parked or stationary vehicle
-                3: Crossing from driver's offside
-                4: Crossing from offside - masked by  parked or stationary vehicle
-                5: In carriageway, stationary - not crossing  (standing or playing)
-                6: In carriageway, stationary - not crossing  (standing or playing)
-                  - masked by parked or stationary vehicle
-                7: Walking along in carriageway, facing traffic
-                8: Walking along in carriageway, back to traffic
-                9: Unknown or other
-                -1: Data missing or out of range
-          - name: car_passenger
-            meta:
-              allowed_values:
-                0: Not car passenger
-                1: Front seat passenger
-                2: Rear seat passenger
-                9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: bus_or_coach_passenger
-            meta:
-              allowed_values:
-                0: Not a bus or coach passenger
-                1: Boarding
-                2: Alighting
-                3: Standing passenger
-                4: Seated passenger
-                9: unknown (self reported)
-                -1: Data missing or out of range
-          - name: pedestrian_road_maintenance_worker
-            description: 2005 specification only
-            meta:
-              allowed_values:
-                0: No / Not applicable
-                1: 'Yes'
-                2: Not Known
-                3: Probable
-                -1: Data missing or out of range
-          - name: casualty_type
-            description: introduced in 1999 specification
-            meta:
-              allowed_values:
-                0: Pedestrian
-                1: Cyclist
-                2: Motorcycle 50cc and under rider or passenger
-                3: Motorcycle 125cc and under rider or passenger
-                4: Motorcycle over 125cc and up to 500cc rider or  passenger
-                5: Motorcycle over 500cc rider or passenger
-                8: Taxi/Private hire car occupant
-                9: Car occupant
-                10: Minibus (8 - 16 passenger seats) occupant
-                11: Bus or coach occupant (17 or more pass seats)
-                16: Horse rider
-                17: Agricultural vehicle occupant
-                18: Tram occupant
-                19: Van / Goods vehicle (3.5 tonnes mgw or under) occupant
-                20: Goods vehicle (over 3.5t. and under 7.5t.) occupant
-                21: Goods vehicle (7.5 tonnes mgw and over) occupant
-                22: Mobility scooter rider
-                23: Electric motorcycle rider or passenger
-                90: Other vehicle occupant
-                97: Motorcycle - unknown cc rider or passenger
-                98: Goods vehicle (unknown weight) occupant
-                99: Unknown vehicle type (self rep only)
-                103: Motorcycle - Scooter (1979-1998)
-                104: Motorcycle (1979-1998)
-                105: Motorcycle - Combination (1979-1998)
-                106: Motorcycle over 125cc (1999-2004)
-                108: Taxi (excluding private hire cars) (1979-2004)
-                109: Car (including private hire cars) (1979-2004)
-                110: Minibus/Motor caravan (1979-1998)
+                11: Bus or coach (17 or more pass seats)
                 113: Goods over 3.5 tonnes (1979-1998)
+                2: Motorcycle 50cc and under
+                3: Motorcycle 125cc and under
+                4: Motorcycle over 125cc and up to 500cc
+                5: Motorcycle over 500cc
+                8: Taxi/Private hire car
+                9: Car
+                10: Minibus (8 - 16 passenger seats)
                 -1: Data missing or out of range
-          - name: casualty_imd_decile
-            description: field introduced in 2016
-            meta:
-              allowed_values:
-                1: Most deprived 10%
-                2: More deprived 10-20%
-                3: More deprived 20-30%
-                4: More deprived 30-40%
-                5: More deprived 40-50%
-                6: Less deprived 40-50%
-                7: Less deprived 30-40%
-                8: Less deprived 20-30%
-                9: Less deprived 10-20%
-                10: Least deprived 10%
-                -1: Data missing or out of range
-          - name: lsoa_of_casualty
-            description: 'England and Wales only. See Office for National Statistics
-              (ONS) guidance: https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography'
-          - name: casualty_injury_based
-            meta:
-              allowed_values:
-                0: Based on severity reporting
-                1: Based on Injury code reporting
-          - name: casualty_adjusted_serious
-          - name: casualty_adjusted_slight
-          - name: casualty_distance_banding
-            description: field introduced in 2023
-            meta:
-              allowed_values:
-                1: Collision occurred within 5km of casualties home postcode
-                2: Collision occurred between 5.001 and 10km of casualties home postcode
-                3: Collision occurred between 10.001 and 20km of casualties home postcode
-                4: Collision occurred between 20.001 and 100km of casualties home
-                  postcode
-                5: Collision occurred over 100km of casualties home postcode
-                -1: Data missing or out of range
-      - name: historical_revisions
-        meta:
-          external_location: "data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv"
-        columns:
-          - name: accident_index
-            description: unique value for each accident. The accident_index combines
-              the accident_year and accident_ref_no to form a unique ID. It can be
-              used to join to Vehicle and Casualty
-          - name: accident_year
-          - name: accident_ref_no
-            description: In year id used by the police to reference a collision. It
-              is not unique outside of the year, use accident_index for linking to
-              other years
-          - name: police_force
-            description: (See above)
-          - name: vehicle_reference
-            description: unique value for each vehicle in a singular accident. Can
-              be used to join a Casualty to a vehicle
-          - name: casualty_reference
-            description: unique value for each casualty in a singular accident (historical
-              years may be unique to a singular vehicle in a road accident)
-          - name: variable
-            description: (See police_force values in accident listings for values)
-          - name: previously_published_value
-          - name: replacement_value
-          - name: effective_date_of_change
-            description: Date the change was made
+                1: Pedal cycle
+                110: Minibus/Motor caravan (1979-1998)
+                109: Car (including private hire cars) (1979-2004)
+                108: Taxi (excluding private hire cars) (1979-2004)
+                106: Motorcycle over 125cc (1999-2004)
+                105: Motorcycle - Combination (1979-1998)
+                104: Motorcycle (1979-1998)
+                103: Motorcycle - Scooter (1979-1998)
+                99: Unknown vehicle type (self rep only)
+                98: Goods vehicle - unknown weight
+                97: Motorcycle - unknown cc
+                90: Other vehicle
+                23: Electric motorcycle
+                22: Mobility scooter
+                21: Goods 7.5 tonnes mgw and over
+                20: Goods over 3.5t. and under 7.5t
+                19: Van / Goods 3.5 tonnes mgw or under
+                18: Tram
+                16: Ridden horse
+                17: Agricultural vehicle

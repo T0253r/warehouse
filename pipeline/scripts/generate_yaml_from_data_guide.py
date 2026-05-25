@@ -1,15 +1,28 @@
-import pandas as pd
+import duckdb
 import yaml
-import math
 
 def generate_yaml_schema(input_csv_path, output_yml_path):
-    # 1. Read the CSV file
-    df = pd.read_csv(input_csv_path)
+    # 1. Connect to an in-memory DuckDB instance
+    conn = duckdb.connect()
     
-    # Clean up column names in case there is trailing whitespace
-    df.columns = df.columns.str.strip()
+    # 2. Query, clean, and sort the CSV directly in SQL
+    # We use read_csv_auto() and sort by table and field name to build our hierarchy sequentially.
+    query = f"""
+        SELECT 
+            TRIM("table") AS table_name,
+            TRIM("field name") AS field_name,
+            TRIM("note") AS note,
+            TRIM(CAST("code/format" AS VARCHAR)) AS code_format,
+            TRIM("label") AS label
+        FROM read_csv_auto('{input_csv_path}')
+        WHERE "table" IS NOT NULL
+        ORDER BY "table", "field name"
+    """
     
-    # 2. Initialize the base structure
+    # Execute and fetch all rows as tuples
+    rows = conn.execute(query).fetchall()
+    
+    # 3. Initialize the base structure
     schema = {
         "sources": [
             {
@@ -23,57 +36,60 @@ def generate_yaml_schema(input_csv_path, output_yml_path):
     
     tables_list = schema["sources"][0]["tables"]
     
-    # 3. Group by 'table' (sort=False keeps the original order of the CSV)
-    for table_name, table_group in df.groupby("table", sort=False):
-        table_dict = {
-            "name": table_name,
-            "columns": []
-        }
+    # State-tracking variables for our sequential loop
+    current_table_name = None
+    current_field_name = None
+    current_table_dict = None
+    current_column_dict = None
+
+    # 4. Iterate over the sorted flat rows to build the nested dictionaries
+    for row in rows:
+        # DuckDB returns None for empty CSV cells (SQL NULL)
+        t_name = row[0] or ""
+        f_name = row[1] or ""
+        note = row[2] or ""
+        code = row[3] or ""
+        label = row[4] or ""
         
-        # 4. Group by 'field name' within each table
-        for field_name, field_group in table_group.groupby("field name", sort=False):
-            # Fill NaNs with empty strings to make checking easier
-            field_group = field_group.fillna("")
+        # Table level change
+        if t_name != current_table_name:
+            current_table_dict = {
+                "name": t_name,
+                "columns": []
+            }
+            tables_list.append(current_table_dict)
+            current_table_name = t_name
+            current_field_name = None # Reset field tracker on new table
             
-            # Find the description (which sits in the 'note' column)
-            notes = field_group["note"].loc[field_group["note"] != ""]
-            description = str(notes.iloc[0]).strip() if len(notes) > 0 else ""
+        # Field level change
+        if f_name != current_field_name:
+            current_column_dict = {"name": f_name}
             
-            column_dict = {"name": field_name}
-            
-            if description:
-                column_dict["description"] = description
+            # Add description if it exists (grabbing the first non-empty note for this field)
+            if note:
+                current_column_dict["description"] = note
                 
-            # 5. Collect allowed_values mapping [code/format] -> [label]
-            allowed_values = {}
-            for _, row in field_group.iterrows():
-                code = str(row["code/format"]).strip()
-                label = str(row["label"]).strip()
-                
-                # If both exist, this row defines a mapping
-                if code and label:
-                    # Clean up numeric codes (e.g., '1.0' -> 1) for prettier YAML
-                    try:
-                        if float(code).is_integer():
-                            code_key = int(float(code))
-                        else:
-                            code_key = float(code)
-                    except ValueError:
-                        code_key = code # Fallback to string if it's text
-                        
-                    allowed_values[code_key] = label
-                    
-            # Only add meta and allowed_values if there's mapping data available
-            if allowed_values:
-                column_dict["meta"] = {
-                    "allowed_values": allowed_values
-                }
-                
-            table_dict["columns"].append(column_dict)
+            current_table_dict["columns"].append(current_column_dict)
+            current_field_name = f_name
             
-        tables_list.append(table_dict)
-        
-    # 6. Custom Dumper to indent list items (-) properly (a standard convention for dbt schemas)
+        # 5. Collect allowed_values mapping
+        if code and label:
+            # Ensure the 'meta' and 'allowed_values' dicts exist
+            if "meta" not in current_column_dict:
+                current_column_dict["meta"] = {"allowed_values": {}}
+                
+            # Clean up numeric codes (e.g., '1.0' -> 1) for prettier YAML
+            try:
+                if float(code).is_integer():
+                    code_key = int(float(code))
+                else:
+                    code_key = float(code)
+            except ValueError:
+                code_key = code # Fallback to string if it's text
+                
+            current_column_dict["meta"]["allowed_values"][code_key] = label
+
+    # 6. Custom Dumper to indent list items (-) properly 
     class IndentedDumper(yaml.Dumper):
         def increase_indent(self, flow=False, indentless=False):
             return super(IndentedDumper, self).increase_indent(flow, False)
@@ -84,16 +100,15 @@ def generate_yaml_schema(input_csv_path, output_yml_path):
             schema, 
             f, 
             Dumper=IndentedDumper, 
-            default_flow_style=False, # Forces block style (not inline JSON style)
-            sort_keys=False,          # Preserves our column insertion order
+            default_flow_style=False, # Forces block style
+            sort_keys=False,          # Preserves column insertion order
             allow_unicode=True        # Preserves special characters
         )
     
-    print(f"Successfully generated '{output_yml_path}'!")
+    print(f"Successfully generated '{output_yml_path}' using DuckDB!")
 
 if __name__ == "__main__":
-    # Change these filenames if your local files are named differently
-    input_file = "/home/t0253r/Studia/hurtownie/duck_warehouse/data/data_guide/dft-road-casualty-statistics-road-safety-open-dataset-data-guide-2024.csv"
-    output_file = "/home/t0253r/Studia/hurtownie/duck_warehouse/pipeline/scripts/generated_schema.yml"
+    input_file = "/home/t0253r/Studia/hurtownie/warehouse/data/data_guide/dft-road-casualty-statistics-road-safety-open-dataset-data-guide-2024.csv"
+    output_file = "/home/t0253r/Studia/hurtownie/warehouse/pipeline/scripts/generated_schema.yml"
     
     generate_yaml_schema(input_file, output_file)
