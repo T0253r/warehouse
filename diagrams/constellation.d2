@@ -5,25 +5,24 @@ Fact_Collision: {
   shape: sql_table
   collision_key: string {constraint: primary_key}
   collision_index: string 
-  DateKey: string {constraint: foreign_key}
-  TimeKey: string {constraint: foreign_key}
-  LocationKey: string {constraint: foreign_key}
-  InfrastructureKey: string {constraint: foreign_key}
-  ConditionKey: string {constraint: foreign_key}
+  date_key: string {constraint: foreign_key}
+  time_key: string {constraint: foreign_key}
+  location_key: string {constraint: foreign_key}
+  infrasturcture_key: string {constraint: foreign_key}
+  condition_key: string {constraint: foreign_key}
   collision_severity: string
-  number_of_vehicles: int
-  number_of_casualties: int
-  # skip these two (they are more complex and their handling will be added later)
-  # enhanced_severity_collision: int
-  # collision_injury_based: int
+  number_of_vehicles: string
+  number_of_casualties: string
+  # enhanced_severity_collision: string
+  # collision_injury_based: string
 }
 
 Fact_Vehicle_Involvement: {
   shape: sql_table
   vehicle_key: string {constraint: primary_key}
   collision_key: string {constraint: foreign_key}
-  MotionKey: string {constraint: foreign_key}
-  DynamicsKey: string {constraint: foreign_key}
+  motion_key: string {constraint: foreign_key}
+  dynamics_key: string {constraint: foreign_key}
 }
 
 Fact_Casualty_Involvement: {
@@ -37,122 +36,122 @@ Fact_Casualty_Involvement: {
 Dim_Casualty: {
   shape: sql_table
   casualty_key: string {constraint: primary_key}
-  casualty_class: int
-  casualty_type: int
-  sex_of_casualty: int
-  age_of_casualty: int
-  age_band_of_casualty: int
-  casualty_severity: int
-  pedestrian_location: int
-  pedestrian_movement: int
-  car_passenger: int
-  bus_or_coach_passenger: int
-  casualty_imd_decile: int
-  casualty_distance_banding: int
+  casualty_class: string
+  casualty_type: string
+  sex_of_casualty: string
+  age_of_casualty: string
+  age_band_of_casualty: string
+  casualty_severity: string
+  # pedestrian_location: string
+  # pedestrian_movement: string
+  # car_passenger: string
+  # bus_or_coach_passenger: string
+  # casualty_imd_decile: string
+  # casualty_distance_banding: string
 }
 
 Dim_Vehicle: {
   shape: sql_table
   vehicle_key: string {constraint: primary_key}
-  vehicle_type: int
-  is_escooter: boolean
-  engine_capacity_cc: int
-  propulsion_code: int
-  age_of_vehicle: int
-  generic_make_model: int
-  towing_and_articulation: int
-  vehicle_left_hand_drive: int
-  sex_of_driver: int
-  age_of_driver: int
-  age_band_of_driver: int
-  journey_purpose_of_driver: int
-  driver_imd_decile: int
-  driver_distance_banding: int
+  vehicle_type: string
+  # is_escooter: boolean
+  engine_capacity_cc: string
+  propulsion_code: string
+  age_of_vehicle: string
+  generic_make_model: string
+  # towing_and_articulation: string
+  vehicle_left_hand_drive: string
+  sex_of_driver: string
+  age_of_driver: string
+  age_band_of_driver: string
+  # journey_purpose_of_driver: string
+  # driver_imd_decile: string
+  driver_distance_banding: string
 }
 
 Dim_Date: {
   shape: sql_table
-  DateKey: string {constraint: primary_key}
+  date_key: string {constraint: primary_key}
   collision_date: date
-  collision_year: int
-  day_of_week: int
+  collision_year: string
+  day_of_week: string
 }
 
 Dim_Time: {
   shape: sql_table
-  TimeKey: string {constraint: primary_key}
+  time_key: string {constraint: primary_key}
   collision_time: time
 }
 
 Dim_Location: {
   shape: sql_table
-  LocationKey: string {constraint: primary_key}
+  location_key: string {constraint: primary_key}
   longitude: float
   latitude: float
-  location_easting_osgr: int
-  location_northing_osgr: int
-  police_force: int
-  local_authority_district: int
-  local_authority_highway: string
-  urban_or_rural_area: int
-  lsoa_of_accident_location: string
+  # location_easting_osgr: string
+  # location_northing_osgr: string
+  police_force: string
+  local_authority_district: string
+  # local_authority_highway: string
+  # urban_or_rural_area: string
+  # lsoa_of_accident_location: string
 }
 
 Dim_Infrastructure: {
   shape: sql_table
-  InfrastructureKey: string {constraint: primary_key}
-  first_road_class: int
-  first_road_number: int
-  second_road_class: int
-  second_road_number: int
-  road_type: int
-  speed_limit: int
-  junction_detail: int
-  junction_control: int
-  pedestrian_crossing: int
+  infrasturcture_key: string {constraint: primary_key}
+  first_road_class: string
+  first_road_number: string
+  second_road_class: string
+  second_road_number: string
+  road_type: string
+  speed_limit: string
+  # junction_detail: string
+  # junction_control: string
+  # pedestrian_crossing: string
 }
 
 Dim_Condition: {
   shape: sql_table
-  ConditionKey: string {constraint: primary_key}
-  light_conditions: int
-  weather_conditions: int
-  road_surface_conditions: int
-  special_conditions_at_site: int
-  carriageway_hazards: int
+  condition_key: string {constraint: primary_key}
+  light_conditions: string
+  weather_conditions: string
+  road_surface_conditions: string
+  special_conditions_at_site: string
+  # carriageway_hazards: string
 }
 
 Dim_Pre_Collision_Motion: {
   shape: sql_table
-  MotionKey: string {constraint: primary_key}
-  vehicle_manoeuvre: int
-  vehicle_direction_from: int
-  vehicle_direction_to: int
-  vehicle_location_restricted_lane: int
-  junction_location: int
+  motion_key: string {constraint: primary_key}
+  # vehicle_manoeuvre: string
+  # vehicle_direction_from: string
+  # vehicle_direction_to: string
+  # vehicle_location_restricted_lane: string
+  junction_location: string
 }
 
 Dim_Collision_Dynamics: {
   shape: sql_table
-  DynamicsKey: string {constraint: primary_key}
-  skidding_and_overturning: int
-  hit_object_in_carriageway: int
-  vehicle_leaving_carriageway: int
-  hit_object_off_carriageway: int
-  first_point_of_impact: int
+  dynamics_key: string {constraint: primary_key}
+  # skidding_and_overturning: string
+  # hit_object_in_carriageway: string
+  # vehicle_leaving_carriageway: string
+  # hit_object_off_carriageway: string
+  first_point_of_impact: string
 }
 
 # Dimensions to Fact_Collision (Level 1 Grain)
-Dim_Date.DateKey -> Fact_Collision.DateKey
-Dim_Time.TimeKey -> Fact_Collision.TimeKey
-Dim_Location.LocationKey -> Fact_Collision.LocationKey
-Dim_Infrastructure.InfrastructureKey -> Fact_Collision.InfrastructureKey
-Dim_Condition.ConditionKey -> Fact_Collision.ConditionKey
+Dim_Date.date_key -> Fact_Collision.date_key
+Dim_Time.time_key -> Fact_Collision.time_key
+Dim_Location.location_key -> Fact_Collision.location_key
+Dim_Infrastructure.infrasturcture_key -> Fact_Collision.infrasturcture_key
+Dim_Condition.condition_key -> Fact_Collision.condition_key
 
 # Dimensions to Fact_Vehicle_Involvement (Level 2 Grain)
 Dim_Vehicle.vehicle_key -> Fact_Vehicle_Involvement.vehicle_key
-Dim_Pre_Collision_Motion.MotionKey -> Fact_Vehicle_Involvement.MotionKey
-Dim_Collision_Dynamics.DynamicsKey -> Fact_Vehicle_Involvement.DynamicsKey
+Dim_Pre_Collision_Motion.motion_key -> Fact_Vehicle_Involvement.motion_key
+Dim_Collision_Dynamics.dynamics_key -> Fact_Vehicle_Involvement.dynamics_key
 
 # Dimensions to Fact_Casualty_Involvement (Level 2 Grain)
 Dim_Casualty.casualty_key -> Fact_Casualty_Involvement.casualty_key
