@@ -10,7 +10,7 @@ st.write("Previewing staged data directly from DuckDB before mart models are bui
 # Maintain a lightweight cached connection to the read-only DuckDB file
 @st.cache_resource
 def get_connection():
-    return duckdb.connect('/home/t0253r/Studia/hurtownie/duck_warehouse/data/duck_warehouse.duckdb', read_only=True)
+    return duckdb.connect('/home/t0253r/Studia/hurtownie/warehouse/data/duck_warehouse.duckdb', read_only=True)
 
 con = get_connection()
 

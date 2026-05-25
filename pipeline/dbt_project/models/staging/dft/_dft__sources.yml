@@ -3,11 +3,10 @@ version: 2
 sources:
   - name: dft
     description: Raw STATS19 open data downloaded from the DfT.
-    schema: main
     tables:
       - name: collision
-        meta:
-            external_location: "data/complete_dataset/dft-road-casualty-statistics-collision-1979-latest-published-year.csv"
+        config:
+          external_location: "data/complete_dataset/dft-road-casualty-statistics-collision-1979-latest-published-year.csv"
         columns:
           - name: collision_index
             description: unique value for each collision. The collision_index combines
@@ -1552,7 +1551,7 @@ sources:
           - name: collision_adjusted_serious
           - name: collision_adjusted_slight
       - name: vehicle
-        meta:
+        config:
           external_location: "data/complete_dataset/dft-road-casualty-statistics-vehicle-1979-latest-published-year.csv"
         columns:
           - name: collision_index
@@ -1920,8 +1919,16 @@ sources:
                 4: Collision occurred between 20.001 and 100km of drivers home postcode
                 5: Collision occurred over 100km of drivers home postcode
       - name: casualty
-        meta:
-          external_location: "data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv"
+        config:
+          external_location: >
+            {% raw %}
+              read_csv(
+                'data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv',
+                types={{
+                  'lsoa_of_casualty': 'VARCHAR'
+                }}
+              )
+            {% endraw %}
         columns:
           - name: collision_index
             description: unique value for each collision. The collision_index combines
