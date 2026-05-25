@@ -13,15 +13,15 @@ Fact_Collision: {
   collision_severity: int
   number_of_vehicles: int
   number_of_casualties: int
-  enhanced_severity_collision: int
-  collision_injury_based: int
+  # skip these two (they are more complex and their handling will be added later)
+  # enhanced_severity_collision: int
+  # collision_injury_based: int
 }
 
 Fact_Vehicle_Involvement: {
   shape: sql_table
   vehicle_key: string {constraint: primary_key}
   collision_key: string {constraint: foreign_key}
-  vehicle_reference: int
   MotionKey: string {constraint: foreign_key}
   DynamicsKey: string {constraint: foreign_key}
 }
@@ -31,7 +31,6 @@ Fact_Casualty_Involvement: {
   casualty_key: string {constraint: primary_key}
   collision_key: string {constraint: foreign_key}
   vehicle_key: string {constraint: foreign_key}
-  casualty_reference: int
 }
 
 # Dimension Tables
@@ -159,6 +158,6 @@ Dim_Collision_Dynamics.DynamicsKey -> Fact_Vehicle_Involvement.DynamicsKey
 Dim_Casualty.casualty_key -> Fact_Casualty_Involvement.casualty_key
 Dim_Vehicle.vehicle_key -> Fact_Casualty_Involvement.vehicle_key
 
-# Fact to Fact Relationships (Degenerate Dimension Link)
+# Fact to Fact Relationships (Factless Fact Link)
 Fact_Collision.collision_key -> Fact_Vehicle_Involvement.collision_key
 Fact_Collision.collision_key -> Fact_Casualty_Involvement.collision_key
