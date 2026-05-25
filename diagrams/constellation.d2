@@ -1,68 +1,164 @@
 direction: right
 
-# Tables
+# Fact Tables
 Fact_Collision: {
   shape: sql_table
-  Collision_ID: string {constraint: primary_key}
-  DateKey: int {constraint: foreign_key}
-  TimeKey: int {constraint: foreign_key}
-  LocationKey: int {constraint: foreign_key}
-  InfrastructureKey: int {constraint: foreign_key}
-  ConditionKey: int {constraint: foreign_key}
-  Total_Vehicles: int
-  Total_Casualties: int
+  collision_key: string {constraint: primary_key}
+  collision_index: string 
+  DateKey: string {constraint: foreign_key}
+  TimeKey: string {constraint: foreign_key}
+  LocationKey: string {constraint: foreign_key}
+  InfrastructureKey: string {constraint: foreign_key}
+  ConditionKey: string {constraint: foreign_key}
+  collision_severity: int
+  number_of_vehicles: int
+  number_of_casualties: int
+  enhanced_severity_collision: int
+  collision_injury_based: int
 }
 
 Fact_Vehicle_Involvement: {
   shape: sql_table
-  Collision_ID: string {constraint: foreign_key}
-  VehicleKey: int {constraint: foreign_key}
-  MotionKey: int {constraint: foreign_key}
-  DynamicsKey: int {constraint: foreign_key}
+  vehicle_key: string {constraint: primary_key}
+  collision_key: string {constraint: foreign_key}
+  vehicle_reference: int
+  MotionKey: string {constraint: foreign_key}
+  DynamicsKey: string {constraint: foreign_key}
 }
 
 Fact_Casualty_Involvement: {
   shape: sql_table
-  Collision_ID: string {constraint: foreign_key}
-  CasualtyKey: int {constraint: foreign_key}
-  VehicleKey: int {constraint: foreign_key}
+  casualty_key: string {constraint: primary_key}
+  collision_key: string {constraint: foreign_key}
+  vehicle_key: string {constraint: foreign_key}
+  casualty_reference: int
 }
 
+# Dimension Tables
 Dim_Casualty: {
   shape: sql_table
-  CasualtyKey: int {constraint: primary_key}
+  casualty_key: string {constraint: primary_key}
+  casualty_class: int
+  casualty_type: int
+  sex_of_casualty: int
+  age_of_casualty: int
+  age_band_of_casualty: int
+  casualty_severity: int
+  pedestrian_location: int
+  pedestrian_movement: int
+  car_passenger: int
+  bus_or_coach_passenger: int
+  casualty_imd_decile: int
+  casualty_distance_banding: int
 }
 
 Dim_Vehicle: {
   shape: sql_table
-  VehicleKey: int {constraint: primary_key}
+  vehicle_key: string {constraint: primary_key}
+  vehicle_type: int
+  is_escooter: boolean
+  engine_capacity_cc: int
+  propulsion_code: int
+  age_of_vehicle: int
+  generic_make_model: int
+  towing_and_articulation: int
+  vehicle_left_hand_drive: int
+  sex_of_driver: int
+  age_of_driver: int
+  age_band_of_driver: int
+  journey_purpose_of_driver: int
+  driver_imd_decile: int
+  driver_distance_banding: int
 }
 
-# Empty Dimension Tables (Inferred from relationships)
-Dim_Date: {shape: sql_table}
-Dim_Time: {shape: sql_table}
-Dim_Location: {shape: sql_table}
-Dim_Infrastructure: {shape: sql_table}
-Dim_Condition: {shape: sql_table}
-Dim_Pre_Collision_Motion: {shape: sql_table}
-Dim_Collision_Dynamics: {shape: sql_table}
+Dim_Date: {
+  shape: sql_table
+  DateKey: string {constraint: primary_key}
+  collision_date: date
+  collision_year: int
+  day_of_week: int
+}
+
+Dim_Time: {
+  shape: sql_table
+  TimeKey: string {constraint: primary_key}
+  collision_time: time
+}
+
+Dim_Location: {
+  shape: sql_table
+  LocationKey: string {constraint: primary_key}
+  longitude: float
+  latitude: float
+  location_easting_osgr: int
+  location_northing_osgr: int
+  police_force: int
+  local_authority_district: int
+  local_authority_highway: string
+  urban_or_rural_area: int
+  lsoa_of_accident_location: string
+}
+
+Dim_Infrastructure: {
+  shape: sql_table
+  InfrastructureKey: string {constraint: primary_key}
+  first_road_class: int
+  first_road_number: int
+  second_road_class: int
+  second_road_number: int
+  road_type: int
+  speed_limit: int
+  junction_detail: int
+  junction_control: int
+  pedestrian_crossing: int
+}
+
+Dim_Condition: {
+  shape: sql_table
+  ConditionKey: string {constraint: primary_key}
+  light_conditions: int
+  weather_conditions: int
+  road_surface_conditions: int
+  special_conditions_at_site: int
+  carriageway_hazards: int
+}
+
+Dim_Pre_Collision_Motion: {
+  shape: sql_table
+  MotionKey: string {constraint: primary_key}
+  vehicle_manoeuvre: int
+  vehicle_direction_from: int
+  vehicle_direction_to: int
+  vehicle_location_restricted_lane: int
+  junction_location: int
+}
+
+Dim_Collision_Dynamics: {
+  shape: sql_table
+  DynamicsKey: string {constraint: primary_key}
+  skidding_and_overturning: int
+  hit_object_in_carriageway: int
+  vehicle_leaving_carriageway: int
+  hit_object_off_carriageway: int
+  first_point_of_impact: int
+}
 
 # Dimensions to Fact_Collision (Level 1 Grain)
-Dim_Date -> Fact_Collision.DateKey
-Dim_Time -> Fact_Collision.TimeKey
-Dim_Location -> Fact_Collision.LocationKey
-Dim_Infrastructure -> Fact_Collision.InfrastructureKey
-Dim_Condition -> Fact_Collision.ConditionKey
+Dim_Date.DateKey -> Fact_Collision.DateKey
+Dim_Time.TimeKey -> Fact_Collision.TimeKey
+Dim_Location.LocationKey -> Fact_Collision.LocationKey
+Dim_Infrastructure.InfrastructureKey -> Fact_Collision.InfrastructureKey
+Dim_Condition.ConditionKey -> Fact_Collision.ConditionKey
 
 # Dimensions to Fact_Vehicle_Involvement (Level 2 Grain)
-Dim_Vehicle.VehicleKey -> Fact_Vehicle_Involvement.VehicleKey
-Dim_Pre_Collision_Motion -> Fact_Vehicle_Involvement.MotionKey
-Dim_Collision_Dynamics -> Fact_Vehicle_Involvement.DynamicsKey
+Dim_Vehicle.vehicle_key -> Fact_Vehicle_Involvement.vehicle_key
+Dim_Pre_Collision_Motion.MotionKey -> Fact_Vehicle_Involvement.MotionKey
+Dim_Collision_Dynamics.DynamicsKey -> Fact_Vehicle_Involvement.DynamicsKey
 
 # Dimensions to Fact_Casualty_Involvement (Level 2 Grain)
-Dim_Casualty.CasualtyKey -> Fact_Casualty_Involvement.CasualtyKey
-Dim_Vehicle.VehicleKey -> Fact_Casualty_Involvement.VehicleKey: "or -1 for Pedestrians"
+Dim_Casualty.casualty_key -> Fact_Casualty_Involvement.casualty_key
+Dim_Vehicle.vehicle_key -> Fact_Casualty_Involvement.vehicle_key
 
 # Fact to Fact Relationships (Degenerate Dimension Link)
-Fact_Collision.Collision_ID -> Fact_Vehicle_Involvement.Collision_ID: "1 to 0..N"
-Fact_Collision.Collision_ID -> Fact_Casualty_Involvement.Collision_ID: "1 to 0..N"
+Fact_Collision.collision_key -> Fact_Vehicle_Involvement.collision_key
+Fact_Collision.collision_key -> Fact_Casualty_Involvement.collision_key
