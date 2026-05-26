@@ -6,18 +6,22 @@ sources:
     tables:
       - name: collision
         config:
-          external_location: "data/complete_dataset/dft-road-casualty-statistics-collision-1979-latest-published-year.csv"
+          external_location: >
+            read_csv(
+              'data/complete_dataset/dft-road-casualty-statistics-collision-1979-latest-published-year.csv',
+              all_varchar = true
+            )
       - name: vehicle
         config:
-          external_location: "data/complete_dataset/dft-road-casualty-statistics-vehicle-1979-latest-published-year.csv"
+          external_location: >
+            read_csv(
+              'data/complete_dataset/dft-road-casualty-statistics-vehicle-1979-latest-published-year.csv',
+              all_varchar = true
+            )
       - name: casualty
         config:
           external_location: >
-            {% raw %}
               read_csv(
                 'data/complete_dataset/dft-road-casualty-statistics-casualty-1979-latest-published-year.csv',
-                types={{
-                  'lsoa_of_casualty': 'VARCHAR'
-                }}
+                all_varchar = true
               )
-            {% endraw %}

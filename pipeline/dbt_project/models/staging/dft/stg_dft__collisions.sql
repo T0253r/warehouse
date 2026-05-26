@@ -8,13 +8,14 @@ renamed as (
         {{ dbt_utils.generate_surrogate_key(['collision_index']) }} as collision_key,
         collision_index,
         
-        cast({{ adapter.quote('date') }} as date) as collision_date,
+        cast(strptime({{ adapter.quote('date') }}, '%d/%m/%Y') as date) as collision_date,
         cast({{ adapter.quote('time') }} as time) as collision_time,
         
         cast(longitude as float) as longitude,
         cast(latitude as float) as latitude,
 
         collision_year,
+
         collision_ref_no,
         -- location_easting_osgr,
         -- location_northing_osgr,
