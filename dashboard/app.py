@@ -1,11 +1,11 @@
 # dashboard/app.py
 import streamlit as st
 import duckdb
-import pandas as pd
+import polars as pl
 
 st.set_page_config(page_title="STATS19 Data Preview", layout="wide")
 st.title("UK STATS19 Accident Warehouse Insights")
-st.write("Previewing staged data directly from DuckDB before mart models are built.")
+st.write("Previewing cross-granularity metrics using the newly built dimensional star schema.")
 
 # Maintain a lightweight cached connection to the read-only DuckDB file
 @st.cache_resource
@@ -14,83 +14,97 @@ def get_connection():
 
 con = get_connection()
 
-# Create layout with two columns for our first set of charts
+# --- TOP ROW: Standard Grain Queries ---
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Total Collisions by Year")
-    # Query stg_dft__collisions for a yearly trend
+    # Standard Level 1 Join
     yearly_collisions = con.execute("""
         SELECT 
-            collision_year, 
-            COUNT(collision_key) as total_collisions 
-        FROM stg_dft__collisions 
+            d.collision_year, 
+            COUNT(f.collision_key) as total_collisions 
+        FROM fct_collision f
+        JOIN dim_date d ON f.date_key = d.date_key
         GROUP BY 1 
         ORDER BY 1
-    """).arrow()
+    """).pl()
     
     st.line_chart(yearly_collisions, x='collision_year', y='total_collisions')
 
 with col2:
-    st.subheader("Collisions by Severity")
-    # Map the severity codes based on _dft__sources.yml
+    st.subheader("Casualties by Severity")
+    # Standard Level 2 Join (Querying Dim directly for pure entity stats)
     severity = con.execute("""
         SELECT 
-            CASE collision_severity 
+            CASE casualty_severity 
                 WHEN 1 THEN 'Fatal' 
                 WHEN 2 THEN 'Serious' 
                 WHEN 3 THEN 'Slight' 
                 ELSE 'Unknown' 
             END as severity_level,
-            COUNT(*) as count 
-        FROM stg_dft__collisions 
+            COUNT(*) as casualty_count 
+        FROM dim_casualty 
         GROUP BY 1
-    """).df()
+    """).pl()
     
-    # Setting index makes the bar chart use the text labels correctly on the x-axis
-    st.bar_chart(severity.set_index('severity_level'))
+    st.bar_chart(severity, x='severity_level', y='casualty_count')
 
 st.divider()
+
+# --- BOTTOM ROW: Cross-Granularity Showcases ---
+st.write("### Cross-Granularity Analysis")
+st.write("Showcasing the power of Factless Fact tables to bridge different grains.")
+st.write("") # Spacer
 
 col3, col4 = st.columns(2)
 
 with col3:
-    st.subheader("Collisions by Day of Week")
-    # Map the day of week codes based on _dft__sources.yml
-    dow_collisions = con.execute("""
-        SELECT 
-            CASE day_of_week
-                WHEN 1 THEN 'Sunday'
-                WHEN 2 THEN 'Monday'
-                WHEN 3 THEN 'Tuesday'
-                WHEN 4 THEN 'Wednesday'
-                WHEN 5 THEN 'Thursday'
-                WHEN 6 THEN 'Friday'
-                WHEN 7 THEN 'Saturday'
-                ELSE 'Unknown'
-            END as day,
-            COUNT(*) as total_collisions
-        FROM stg_dft__collisions
-        GROUP BY 1, day_of_week
-        ORDER BY day_of_week
-    """).df()
+    st.subheader("Casualties by Weather Condition")
+    st.caption("Level 2 Casualty ➔ Factless Fact ➔ Fact Collision ➔ Level 1 Condition")
     
-    st.bar_chart(dow_collisions.set_index('day'))
+    # Cross-granularity: Linking casualties up to the collision's overall weather
+    weather_casualties = con.execute("""
+        SELECT 
+            CASE dc.weather_conditions
+                WHEN 1 THEN 'Fine (no high winds)'
+                WHEN 2 THEN 'Raining (no high winds)'
+                WHEN 3 THEN 'Snowing (no high winds)'
+                WHEN 4 THEN 'Fine + high winds'
+                WHEN 5 THEN 'Raining + high winds'
+                WHEN 6 THEN 'Snowing + high winds'
+                WHEN 7 THEN 'Fog or mist'
+                ELSE 'Other/Unknown'
+            END as weather,
+            COUNT(fci.casualty_key) as total_casualties
+        FROM fct_casualty_involvement fci
+        JOIN fct_collision fc ON fci.collision_key = fc.collision_key
+        JOIN dim_condition dc ON fc.condition_key = dc.condition_key
+        GROUP BY 1
+    """).pl()
+    
+    st.bar_chart(weather_casualties, x='weather', y='total_casualties')
 
 with col4:
-    st.subheader("Casualties by Class")
-    # Query stg_dft__casualties to see casualty breakdown
-    casualty_class = con.execute("""
-        SELECT 
-            CASE casualty_class
-                WHEN 1 THEN 'Driver or rider'
-                WHEN 2 THEN 'Passenger'
-                WHEN 3 THEN 'Pedestrian'
-                ELSE 'Unknown'
-            END as class_type,
-            COUNT(*) as total_casualties
-        FROM stg_dft__casualties
-        GROUP BY 1
-    """).df()
+    st.subheader("Casualties by Vehicle Point of Impact")
+    st.caption("Level 2 Casualty ➔ Factless Fact ➔ Fact Vehicle ➔ Level 2 Dynamics")
     
-    st.bar_chart(casualty_class.set_index('class_type'))
+    # Cross-granularity: Linking casualties directly to the specific vehicle dynamics
+    impact_casualties = con.execute("""
+        SELECT 
+            CASE dcd.first_point_of_impact
+                WHEN 0 THEN 'Did not impact'
+                WHEN 1 THEN 'Front'
+                WHEN 2 THEN 'Back'
+                WHEN 3 THEN 'Offside (Right)'
+                WHEN 4 THEN 'Nearside (Left)'
+                ELSE 'Other/Unknown'
+            END as impact_point,
+            COUNT(fci.casualty_key) as total_casualties
+        FROM fct_casualty_involvement fci
+        JOIN fct_vehicle_involvement fvi ON fci.vehicle_key = fvi.vehicle_key
+        JOIN dim_collision_dynamics dcd ON fvi.dynamics_key = dcd.dynamics_key
+        GROUP BY 1
+    """).pl()
+    
+    st.bar_chart(impact_casualties, x='impact_point', y='total_casualties')
