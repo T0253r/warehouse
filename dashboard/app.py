@@ -1,4 +1,3 @@
-# dashboard/app.py
 import streamlit as st
 import duckdb
 import polars as pl
@@ -7,19 +6,16 @@ st.set_page_config(page_title="STATS19 Data Preview", layout="wide")
 st.title("UK STATS19 Accident Warehouse Insights")
 st.write("Previewing cross-granularity metrics using the newly built dimensional star schema.")
 
-# Maintain a lightweight cached connection to the read-only DuckDB file
 @st.cache_resource
 def get_connection():
     return duckdb.connect('/home/t0253r/Studia/hurtownie/warehouse/data/duck_warehouse.duckdb', read_only=True)
 
 con = get_connection()
 
-# --- TOP ROW: Standard Grain Queries ---
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Total Collisions by Year")
-    # Standard Level 1 Join
     yearly_collisions = con.execute("""
         SELECT 
             d.collision_year, 
@@ -34,7 +30,6 @@ with col1:
 
 with col2:
     st.subheader("Casualties by Severity")
-    # Standard Level 2 Join (Querying Dim directly for pure entity stats)
     severity = con.execute("""
         SELECT 
             CASE casualty_severity 
@@ -52,7 +47,6 @@ with col2:
 
 st.divider()
 
-# --- BOTTOM ROW: Cross-Granularity Showcases ---
 st.write("### Cross-Granularity Analysis")
 st.write("Showcasing the power of Factless Fact tables to bridge different grains.")
 st.write("") # Spacer
@@ -63,7 +57,6 @@ with col3:
     st.subheader("Casualties by Weather Condition")
     st.caption("Level 2 Casualty ➔ Factless Fact ➔ Fact Collision ➔ Level 1 Condition")
     
-    # Cross-granularity: Linking casualties up to the collision's overall weather
     weather_casualties = con.execute("""
         SELECT 
             CASE dc.weather_conditions
@@ -89,7 +82,6 @@ with col4:
     st.subheader("Casualties by Vehicle Point of Impact")
     st.caption("Level 2 Casualty ➔ Factless Fact ➔ Fact Vehicle ➔ Level 2 Dynamics")
     
-    # Cross-granularity: Linking casualties directly to the specific vehicle dynamics
     impact_casualties = con.execute("""
         SELECT 
             CASE dcd.first_point_of_impact
