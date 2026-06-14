@@ -81,11 +81,31 @@ models:
         meta:
           dimension:
             groups: ["date_info"]
+      - name: day_of_week
+        meta:
+          dimension:
+            groups: ["date_info"]
       - name: day_of_week_name
         meta:
           dimension:
             groups: ["date_info"]
+      - name: month_of_year
+        meta:
+          dimension:
+            groups: ["date_info"]
       - name: month_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: quarter_of_year
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: year_number
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: week_of_year
         meta:
           dimension:
             groups: ["date_info"]
@@ -300,11 +320,31 @@ models:
         meta:
           dimension:
             groups: ["date_info"]
+      - name: day_of_week
+        meta:
+          dimension:
+            groups: ["date_info"]
       - name: day_of_week_name
         meta:
           dimension:
             groups: ["date_info"]
+      - name: month_of_year
+        meta:
+          dimension:
+            groups: ["date_info"]
       - name: month_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: quarter_of_year
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: year_number
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: week_of_year
         meta:
           dimension:
             groups: ["date_info"]
@@ -534,11 +574,31 @@ models:
         meta:
           dimension:
             groups: ["date_info"]
+      - name: day_of_week
+        meta:
+          dimension:
+            groups: ["date_info"]
       - name: day_of_week_name
         meta:
           dimension:
             groups: ["date_info"]
+      - name: month_of_year
+        meta:
+          dimension:
+            groups: ["date_info"]
       - name: month_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: quarter_of_year
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: year_number
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: week_of_year
         meta:
           dimension:
             groups: ["date_info"]
