@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: stats19
+    schema: main
+    description: "Raw road safety data from UK Department for Transport (Stats19)"
+    tables:
+      - name: collisions
+        description: "Stats19 collision statistics"
+        meta:
+          external_location: "read_csv('~/data/dft_incremental/dft-road-casualty-statistics-collision-*.csv', all_varchar=true)"
+      
+      - name: casualties
+        description: "Stats19 casualty statistics"
+        meta:
+          external_location: "read_csv('~/data/dft_incremental/dft-road-casualty-statistics-casualty-*.csv', all_varchar=true)"
+
+      - name: vehicles
+        description: "Stats19 vehicle statistics"
+        meta:
+          external_location: "read_csv('~/data/dft_incremental/dft-road-casualty-statistics-vehicle-*.csv', all_varchar=true)"
