@@ -12,9 +12,38 @@ Dane pobierane są ze źródeł, a następnie ładowane do analitycznej bazy dan
 
 ## Model Danych
 
-Struktura hurtowni danych bazuje na wielowymiarowym modelu danych w architekturze konstelacji faktów. Została zaprojektowana pod kątem wydajności zapytań analitycznych oraz zachowania znormalizowanej reprezentacji współdzielonych wymiarów.
+Struktura hurtowni danych bazuje na wielowymiarowym modelu danych w architekturze konstelacji faktów. Została zaprojektowana pod kątem wydajności zapytań analitycznych oraz zachowania znormalizowanej reprezentacji współdzielonych wymiarów. Szczegółowy schemat relacji między tabelami faktów i wymiarów został załączony na końcu niniejszego dokumentu.
 
-![Model danych - Konstelacja](diagrams/constellation.png)
+## Struktura Katalogu Projektu
+
+Poniższe drzewo przedstawia strukturę plików w katalogu `dbt_project/` wraz z opisem przeznaczenia poszczególnych warstw transformacji:
+
+```text
+dbt_project/
+└── models/
+    ├── staging/                  # Warstwa wejściowa (Staging) - definicje zewnętrznych źródeł
+    │   ├── src_stats19.yml       # Konfiguracja zewnętrznych plików CSV i ich parametrów
+    │   ├── stg_casualties.sql    # Widok mapujący dane o ofiarach wypadków
+    │   ├── stg_collisions.sql    # Widok mapujący dane o samych zdarzeniach (kolizjach)
+    │   └── stg_vehicles.sql      # Widok mapujący dane o pojazdach
+    │
+    ├── intermediate/             # Warstwa pośrednia - czyszczenie, unifikacja typów i wyliczanie kluczy zastępczych
+    │   ├── int_casualties.sql    # Wstępne czyszczenie i standaryzacja danych o ofiarach
+    │   ├── int_collisions.sql    # Wyliczanie atrybutów czasowych (np. rush hour, pory dnia), integracja danych o ofiarach śmiertelnych
+    │   └── int_vehicles.sql      # Transformacje i standaryzacja danych o pojazdach
+    │
+    └── marts/                    # Warstwa docelowa (Marts) - gotowe struktury analityczne
+        ├── constellation/        # Wielowymiarowy model gwiazdy/konstelacji
+        │   ├── dim_*.sql         # Tabele wymiarów (np. lokalizacja, czas, warunki atmosferyczne, profil uczestnika)
+        │   ├── fact_*.sql        # Tabele faktów (np. fact_collision, fact_vehicle_involvement)
+        │   └── constellation.yml # Definicje asercji testowych dla modelu wielowymiarowego
+        │
+        └── obt/                  # Modele typu OBT (One Big Table) pod wizualizację w BI
+            ├── obt_collision.sql # Płaska, szeroka tabela denormalizująca fakty i wymiary kolizji
+            ├── obt_casualty.sql  # Zdenormalizowany model dedykowany analizie ofiar zdarzeń
+            ├── obt_vehicle.sql   # Zdenormalizowany model dedykowany analizie pojazdów
+            └── obt.yml           # Konfiguracja semantyczna metryk i wymiarów dla integracji z Lightdash
+```
 
 ## Wykorzystane Technologie
 
@@ -116,3 +145,9 @@ dbt build
 # Uruchomienie produkcyjne (MotherDuck)
 dbt build --target prod
 ```
+
+## Załącznik: Schemat Modelu Wielowymiarowego
+
+Poniższy diagram przedstawia strukturę logiczną konstelacji faktów (tabele faktów oraz współdzielone tabele wymiarów) zaimplementowaną w warstwie `marts/constellation/`:
+
+![Model danych - Konstelacja](diagrams/constellation.png)
