@@ -1,0 +1,611 @@
+version: 2
+
+models:
+  - name: obt_collision
+    description: "One Big Table (OBT) model for Collision analysis, denormalizing collisions with dates, times, locations, and conditions."
+    meta:
+      group_details:
+        collision_info:
+          label: "Collision Info"
+          description: "General collision metrics and attributes"
+        date_info:
+          label: "Date Info"
+          description: "Calendar and date dimensions"
+        time_info:
+          label: "Time Info"
+          description: "Hour, minute, and rush hour dimensions"
+        location_info:
+          label: "Location Info"
+          description: "Spatial coordinates and regional authorities"
+        infrastructure:
+          label: "Infrastructure"
+          description: "Road types, junction layouts, and speed limits"
+        conditions:
+          label: "Conditions"
+          description: "Environmental, weather, and light conditions"
+    columns:
+      - name: collision_index
+        description: "Unique identifier for the collision."
+        meta:
+          metrics:
+            total_collisions:
+              label: "Total Collisions"
+              type: count
+          dimension:
+            groups: ["collision_info"]
+
+      - name: number_of_vehicles
+        description: "Number of vehicles involved in the collision."
+        meta:
+          metrics:
+            total_vehicles:
+              label: "Total Vehicles"
+              type: sum
+            average_vehicles:
+              label: "Average Vehicles per Collision"
+              type: average
+          dimension:
+            groups: ["collision_info"]
+
+      - name: number_of_casualties
+        description: "Number of casualties resulting from the collision."
+        meta:
+          metrics:
+            total_casualties:
+              label: "Total Casualties"
+              type: sum
+            average_casualties:
+              label: "Average Casualties per Collision"
+              type: average
+          dimension:
+            groups: ["collision_info"]
+
+      - name: number_of_fatalities
+        description: "Number of fatalities resulting from the collision."
+        meta:
+          metrics:
+            total_fatalities:
+              label: "Total Fatalities"
+              type: sum
+            average_fatalities:
+              label: "Average Fatalities per Collision"
+              type: average
+          dimension:
+            groups: ["collision_info"]
+
+      # Date Info Group
+      - name: collision_date
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: day_of_week_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: month_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+
+      # Time Info Group
+      - name: collision_time
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: collision_hour
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: is_rush_hour
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: time_of_day
+        meta:
+          dimension:
+            groups: ["time_info"]
+
+      # Location Info Group
+      - name: longitude
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: latitude
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: police_force
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: local_authority_district
+        meta:
+          dimension:
+            groups: ["location_info"]
+
+      # Infrastructure Group
+      - name: road_type
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: speed_limit
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: junction_detail
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: junction_control
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+
+      # Conditions Group
+      - name: light_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: weather_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: road_surface_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: special_conditions_at_site
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: carriageway_hazards
+        meta:
+          dimension:
+            groups: ["conditions"]
+
+  - name: obt_vehicle
+    description: "One Big Table (OBT) model for Vehicle analysis, denormalizing vehicle involvements with collision attributes and driver demographics."
+    meta:
+      group_details:
+        vehicle_info:
+          label: "Vehicle Involvement Info"
+          description: "Core metrics for vehicles involved in collisions"
+        vehicle_profile:
+          label: "Vehicle Profile"
+          description: "Attributes of the vehicle, propulsion, and engine"
+        driver_profile:
+          label: "Driver Profile"
+          description: "Demographics, sex, and age of the driver"
+        dynamics:
+          label: "Collision Dynamics"
+          description: "Skidding, impact points, and vehicle movement details"
+        date_info:
+          label: "Date Info"
+          description: "Calendar and date dimensions"
+        time_info:
+          label: "Time Info"
+          description: "Hour, minute, and rush hour dimensions"
+        location_info:
+          label: "Location Info"
+          description: "Spatial coordinates and regional authorities"
+        infrastructure:
+          label: "Infrastructure"
+          description: "Road types, junction layouts, and speed limits"
+        conditions:
+          label: "Conditions"
+          description: "Environmental, weather, and light conditions"
+    columns:
+      - name: vehicle_involvement_key
+        description: "Primary key representing a vehicle's involvement in a specific collision."
+        meta:
+          metrics:
+            total_vehicles_involved:
+              label: "Total Vehicles Involved"
+              type: count
+          dimension:
+            groups: ["vehicle_info"]
+
+      - name: collision_index
+        description: "Collision identifier reference."
+        meta:
+          metrics:
+            total_collisions:
+              label: "Total Collisions"
+              type: count_distinct
+          dimension:
+            groups: ["vehicle_info"]
+
+      # Vehicle Profile Group
+      - name: vehicle_type
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: junction_location
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: vehicle_left_hand_drive
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: engine_capacity_cc
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: propulsion_code
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: age_of_vehicle
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: engine_capacity_banding
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: age_band_of_vehicle
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+
+      # Driver Profile Group
+      - name: sex_of_driver
+        meta:
+          dimension:
+            groups: ["driver_profile"]
+      - name: age_of_driver
+        meta:
+          dimension:
+            groups: ["driver_profile"]
+      - name: age_band_of_driver
+        meta:
+          dimension:
+            groups: ["driver_profile"]
+      - name: driver_distance_banding
+        meta:
+          dimension:
+            groups: ["driver_profile"]
+
+      # Collision Dynamics Group
+      - name: skidding_and_overturning
+        meta:
+          dimension:
+            groups: ["dynamics"]
+      - name: hit_object_in_carriageway
+        meta:
+          dimension:
+            groups: ["dynamics"]
+      - name: vehicle_leaving_carriageway
+        meta:
+          dimension:
+            groups: ["dynamics"]
+      - name: hit_object_off_carriageway
+        meta:
+          dimension:
+            groups: ["dynamics"]
+      - name: first_point_of_impact
+        meta:
+          dimension:
+            groups: ["dynamics"]
+
+      # Date Info Group
+      - name: collision_date
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: day_of_week_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: month_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+
+      # Time Info Group
+      - name: collision_time
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: collision_hour
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: is_rush_hour
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: time_of_day
+        meta:
+          dimension:
+            groups: ["time_info"]
+
+      # Location Info Group
+      - name: longitude
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: latitude
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: police_force
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: local_authority_district
+        meta:
+          dimension:
+            groups: ["location_info"]
+
+      # Infrastructure Group
+      - name: road_type
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: speed_limit
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: junction_detail
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: junction_control
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+
+      # Conditions Group
+      - name: light_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: weather_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: road_surface_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: special_conditions_at_site
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: carriageway_hazards
+        meta:
+          dimension:
+            groups: ["conditions"]
+
+  - name: obt_casualty
+    description: "One Big Table (OBT) model for Casualty analysis, denormalizing casualty involvements with driver/vehicle profiles and collision attributes."
+    meta:
+      group_details:
+        casualty_info:
+          label: "Casualty Involvement Info"
+          description: "Core metrics for casualties involved in collisions"
+        casualty_profile:
+          label: "Casualty Profile"
+          description: "Demographics, severity, and location of the casualty"
+        vehicle_profile:
+          label: "Vehicle Profile"
+          description: "Attributes of the vehicle, propulsion, and engine"
+        date_info:
+          label: "Date Info"
+          description: "Calendar and date dimensions"
+        time_info:
+          label: "Time Info"
+          description: "Hour, minute, and rush hour dimensions"
+        location_info:
+          label: "Location Info"
+          description: "Spatial coordinates and regional authorities"
+        infrastructure:
+          label: "Infrastructure"
+          description: "Road types, junction layouts, and speed limits"
+        conditions:
+          label: "Conditions"
+          description: "Environmental, weather, and light conditions"
+    columns:
+      - name: casualty_involvement_key
+        description: "Primary key representing a casualty's involvement in a specific collision."
+        meta:
+          metrics:
+            total_casualties_involved:
+              label: "Total Casualties Involved"
+              type: count
+          dimension:
+            groups: ["casualty_info"]
+
+      - name: collision_index
+        description: "Collision identifier reference."
+        meta:
+          metrics:
+            total_collisions:
+              label: "Total Collisions"
+              type: count_distinct
+          dimension:
+            groups: ["casualty_info"]
+
+      # Casualty Profile Group
+      - name: casualty_class
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: casualty_type
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: sex_of_casualty
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: age_of_casualty
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: age_band_of_casualty
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: casualty_severity
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: pedestrian_location
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: pedestrian_movement
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: car_passenger
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+      - name: casualty_distance_banding
+        meta:
+          dimension:
+            groups: ["casualty_profile"]
+
+      # Vehicle Profile Group (of the vehicle carrying/hitting them)
+      - name: vehicle_type
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: junction_location
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: vehicle_left_hand_drive
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: sex_of_driver
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: age_of_driver
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: age_band_of_driver
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: engine_capacity_cc
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: propulsion_code
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: age_of_vehicle
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: driver_distance_banding
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: engine_capacity_banding
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+      - name: age_band_of_vehicle
+        meta:
+          dimension:
+            groups: ["vehicle_profile"]
+
+      # Date Info Group
+      - name: collision_date
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: day_of_week_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+      - name: month_name
+        meta:
+          dimension:
+            groups: ["date_info"]
+
+      # Time Info Group
+      - name: collision_time
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: collision_hour
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: is_rush_hour
+        meta:
+          dimension:
+            groups: ["time_info"]
+      - name: time_of_day
+        meta:
+          dimension:
+            groups: ["time_info"]
+
+      # Location Info Group
+      - name: longitude
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: latitude
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: police_force
+        meta:
+          dimension:
+            groups: ["location_info"]
+      - name: local_authority_district
+        meta:
+          dimension:
+            groups: ["location_info"]
+
+      # Infrastructure Group
+      - name: road_type
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: speed_limit
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: junction_detail
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+      - name: junction_control
+        meta:
+          dimension:
+            groups: ["infrastructure"]
+
+      # Conditions Group
+      - name: light_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: weather_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: road_surface_conditions
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: special_conditions_at_site
+        meta:
+          dimension:
+            groups: ["conditions"]
+      - name: carriageway_hazards
+        meta:
+          dimension:
+            groups: ["conditions"]

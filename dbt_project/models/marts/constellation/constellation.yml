@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: dim_casualty_profile
+    meta:
+      hidden: true
+  - name: dim_vehicle_profile
+    meta:
+      hidden: true
+  - name: dim_collision_dynamics
+    meta:
+      hidden: true
+  - name: dim_date
+    meta:
+      hidden: true
+  - name: dim_time
+    meta:
+      hidden: true
+  - name: dim_location
+    meta:
+      hidden: true
+  - name: dim_infrastructures
+    meta:
+      hidden: true
+  - name: dim_conditions
+    meta:
+      hidden: true
+  - name: fact_collision
+    meta:
+      hidden: true
+  - name: fact_vehicle_involvement
+    meta:
+      hidden: true
+  - name: fact_casualty_involvement
+    meta:
+      hidden: true
