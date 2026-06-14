@@ -1,6 +1,0 @@
-car_passenger_code,car_passenger_label
--1,Data missing or out of range
-0,Not car passenger
-1,Front seat passenger
-2,Rear seat passenger
-9,unknown (self reported)

@@ -1,10 +1,10 @@
 version: 2
 
 models:
-  - name: dim_casualty
+  - name: dim_casualty_profile
     description: ""
     columns:
-      - name: casualty_key
+      - name: casualty_profile_key
         data_type: varchar
         description: ""
 
@@ -43,7 +43,7 @@ models:
         data_type: varchar
         description: ""
 
-  - name: dim_condition
+  - name: dim_conditions
     description: ""
     columns:
       - name: condition_key
@@ -161,10 +161,10 @@ models:
         data_type: time
         description: ""
 
-  - name: dim_vehicle
+  - name: dim_vehicle_profile
     description: ""
     columns:
-      - name: vehicle_key
+      - name: vehicle_profile_key
         data_type: varchar
         description: ""
 
@@ -249,7 +249,7 @@ models:
       - name: fct_casualty_involvement
     description: ""
     columns:
-      - name: casualty_key
+      - name: casualty_involvement_key
         data_type: varchar
         description: ""
 
@@ -269,14 +269,38 @@ models:
         data_type: varchar
         description: ""
 
-      - name: vehicle_key
+      - name: date_key
+        data_type: varchar
+        description: ""
+
+      - name: time_key
+        data_type: varchar
+        description: ""
+
+      - name: location_key
+        data_type: varchar
+        description: ""
+
+      - name: infrastructure_key
+        data_type: varchar
+        description: ""
+
+      - name: condition_key
+        data_type: varchar
+        description: ""
+
+      - name: casualty_profile_key
+        data_type: varchar
+        description: ""
+
+      - name: vehicle_profile_key
         data_type: varchar
         description: ""
         
   - name: fct_vehicle_involvement
     description: ""
     columns:
-      - name: vehicle_key
+      - name: vehicle_involvement_key
         data_type: varchar
         description: ""
 
@@ -289,6 +313,30 @@ models:
         description: ""
 
       - name: collision_key
+        data_type: varchar
+        description: ""
+
+      - name: date_key
+        data_type: varchar
+        description: ""
+
+      - name: time_key
+        data_type: varchar
+        description: ""
+
+      - name: location_key
+        data_type: varchar
+        description: ""
+
+      - name: infrastructure_key
+        data_type: varchar
+        description: ""
+
+      - name: condition_key
+        data_type: varchar
+        description: ""
+
+      - name: vehicle_profile_key
         data_type: varchar
         description: ""
 

@@ -11,7 +11,7 @@ macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
 models:
-  duck_warehouse:
+  stats19_warehouse:
     +materialized: view
     
     staging:

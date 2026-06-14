@@ -1,7 +1,0 @@
-light_conditions_code,light_conditions_label
--1,Data missing or out of range
-1,Daylight
-4,Darkness - lights lit
-5,Darkness - lights unlit
-6,Darkness - no lighting
-7,Darkness - lighting unknown

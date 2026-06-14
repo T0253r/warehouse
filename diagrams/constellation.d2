@@ -68,8 +68,10 @@ Dim_Vehicle_Profile: {
   vehicle_type: string
   # is_escooter: boolean
   engine_capacity_cc: int
+  engine_capacity_band: string
   propulsion_code: string
   age_of_vehicle: int
+  age_band_of_vehicle_band: string
   generic_make_model: string
   # towing_and_articulation: string
   vehicle_left_hand_drive: string
@@ -79,23 +81,27 @@ Dim_Vehicle_Profile: {
   # journey_purpose_of_driver: string
   # driver_imd_decile: string
   driver_distance_banding: string
+  junction_location: string
+  first_point_of_impact: string
 }
 
-Dim_Dates: {
+Dim_Date: {
   shape: sql_table
   date_key: string {constraint: primary_key}
   collision_date: date
-  collision_year: string
-  day_of_week: string
+  # + other columns from dbt-date package
 }
 
-Dim_Times: {
+Dim_Time: {
   shape: sql_table
   time_key: string {constraint: primary_key}
   collision_time: time
+  collision_hour: int
+  is_rush_hour: bool
+  time_of_day: string
 }
 
-Dim_Locations: {
+Dim_Location: {
   shape: sql_table
   location_key: string {constraint: primary_key}
   longitude: float
@@ -118,8 +124,8 @@ Dim_Infrastructures: {
   second_road_number: string
   road_type: string
   speed_limit: int
-  # junction_detail: string
-  # junction_control: string
+  junction_detail: string
+  junction_control: string
   # pedestrian_crossing: string
 }
 
@@ -130,63 +136,42 @@ Dim_Conditions: {
   weather_conditions: string
   road_surface_conditions: string
   special_conditions_at_site: string
-  # carriageway_hazards: string
+  carriageway_hazards: string
 }
 
-Dim_Pre_Collision_Motion: {
-  shape: sql_table
-  motion_key: string {constraint: primary_key}
-  # vehicle_manoeuvre: string
-  # vehicle_direction_from: string
-  # vehicle_direction_to: string
-  # vehicle_location_restricted_lane: string
-  junction_location: string
+
+Dim_Date.date_key -- Fact_Collision.date_key
+Dim_Date.date_key -- Fact_Vehicle_Involvement.date_key
+Dim_Date.date_key -- Fact_Casualty_Involvement.date_key
+
+Dim_Time.time_key -- Fact_Collision.time_key
+Dim_Time.time_key -- Fact_Vehicle_Involvement.time_key
+Dim_Time.time_key -- Fact_Casualty_Involvement.time_key
+
+Dim_Location.location_key -- Fact_Collision.location_key
+Dim_Location.location_key -- Fact_Vehicle_Involvement.location_key
+Dim_Location.location_key -- Fact_Casualty_Involvement.location_key
+
+Dim_Infrastructures.infrastructure_key -- Fact_Collision.infrastructure_key
+Dim_Infrastructures.infrastructure_key -- Fact_Vehicle_Involvement.infrastructure_key
+Dim_Infrastructures.infrastructure_key -- Fact_Casualty_Involvement.infrastructure_key
+
+Dim_Conditions.condition_key -- Fact_Collision.condition_key
+Dim_Conditions.condition_key -- Fact_Vehicle_Involvement.condition_key
+Dim_Conditions.condition_key -- Fact_Casualty_Involvement.condition_key
+
+Dim_Vehicle_Profile.vehicle_profile_key -- Fact_Vehicle_Involvement.vehicle_profile_key
+Dim_Vehicle_Profile.vehicle_profile_key -- Fact_Casualty_Involvement.vehicle_profile_key
+
+Dim_Casualty_Profile.casualty_profile_key -- Fact_Casualty_Involvement.casualty_profile_key
+
+Fact_Collision.collision_key -- Fact_Vehicle_Involvement.collision_key {
+  style: {
+    stroke-dash: 3
+  }
 }
-
-Dim_Collision_Dynamics: {
-  shape: sql_table
-  dynamics_key: string {constraint: primary_key}
-  # skidding_and_overturning: string
-  # hit_object_in_carriageway: string
-  # vehicle_leaving_carriageway: string
-  # hit_object_off_carriageway: string
-  first_point_of_impact: string
+Fact_Collision.collision_key -- Fact_Casualty_Involvement.collision_key {
+  style: {
+    stroke-dash: 3
+  }
 }
-
-# --------------------------------------------------------
-# RELATIONSHIPS
-# --------------------------------------------------------
-
-# Core Context Conformed Dimensions (Linked to all 3 Facts)
-Dim_Dates.date_key -> Fact_Collision.date_key
-Dim_Dates.date_key -> Fact_Vehicle_Involvement.date_key
-Dim_Dates.date_key -> Fact_Casualty_Involvement.date_key
-
-Dim_Times.time_key -> Fact_Collision.time_key
-Dim_Times.time_key -> Fact_Vehicle_Involvement.time_key
-Dim_Times.time_key -> Fact_Casualty_Involvement.time_key
-
-Dim_Locations.location_key -> Fact_Collision.location_key
-Dim_Locations.location_key -> Fact_Vehicle_Involvement.location_key
-Dim_Locations.location_key -> Fact_Casualty_Involvement.location_key
-
-Dim_Infrastructures.infrastructure_key -> Fact_Collision.infrastructure_key
-Dim_Infrastructures.infrastructure_key -> Fact_Vehicle_Involvement.infrastructure_key
-Dim_Infrastructures.infrastructure_key -> Fact_Casualty_Involvement.infrastructure_key
-
-Dim_Conditions.condition_key -> Fact_Collision.condition_key
-Dim_Conditions.condition_key -> Fact_Vehicle_Involvement.condition_key
-Dim_Conditions.condition_key -> Fact_Casualty_Involvement.condition_key
-
-# Conformed Profile Dimensions
-Dim_Vehicle_Profile.vehicle_profile_key -> Fact_Vehicle_Involvement.vehicle_profile_key
-Dim_Vehicle_Profile.vehicle_profile_key -> Fact_Casualty_Involvement.vehicle_profile_key
-
-# Specific Dimensions to Level 2 Grain Facts
-Dim_Casualty_Profile.casualty_profile_key -> Fact_Casualty_Involvement.casualty_profile_key
-Dim_Pre_Collision_Motion.motion_key -> Fact_Vehicle_Involvement.motion_key
-Dim_Collision_Dynamics.dynamics_key -> Fact_Vehicle_Involvement.dynamics_key
-
-# Fact to Fact Relationships (Retained Fact Links)
-Fact_Collision.collision_key -> Fact_Vehicle_Involvement.collision_key
-Fact_Collision.collision_key -> Fact_Casualty_Involvement.collision_key

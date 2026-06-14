@@ -1,6 +1,0 @@
-driver_distance_banding_code,driver_distance_banding_label
-1,Collision occurred within 5km of drivers home postcode
-2,Collision occurred between 5.001 and 10km of drivers home postcode
-3,Collision occurred between 10.001 and 20km of drivers home postcode
-4,Collision occurred between 20.001 and 100km of drivers home postcode
-5,Collision occurred over 100km of drivers home postcode

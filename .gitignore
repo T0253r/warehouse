@@ -11,11 +11,11 @@ wheels/
 
 # dbt artifacts
 target/
-pipeline/dbt_project/target/
+dbt_project/target/
 
 # dbt logs
 logs/
-pipeline/dbt_project/logs/
+dbt_project/logs/
 
 # dbt dependencies
 dbt_packages/

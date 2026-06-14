@@ -1,9 +1,0 @@
-pedestrian_crossing_physical_facilities_historic_code,pedestrian_crossing_physical_facilities_historic_label
--1,Data missing or out of range
-0,No physical crossing facilities within 50 metres
-1,Zebra
-4,"Pelican, puffin, toucan or similar non-junction pedestrian light crossing"
-5,Pedestrian phase at traffic signal junction
-7,Footbridge or subway
-8,Central refuge
-9,unknown (self reported)
