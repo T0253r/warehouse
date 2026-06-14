@@ -14,8 +14,14 @@ Fact_Collision: {
 
   # Columns skipped to limit project scope:
   # collision_severity: string
-  # enhanced_severity_collision: string
+  # enhanced_collision_severity: string
   # collision_injury_based: string
+  # collision_year: string
+  # collision_ref_no: string
+  # did_police_officer_attend_scene_of_accident: string
+  # did_police_officer_attend_scene_of_collision: string
+  # collision_adjusted_serious: string
+  # collision_adjusted_slight: string
 
   # Added columns not present in source:
   number_of_fatalities: int
@@ -59,7 +65,7 @@ Dim_Casualty_Profile: {
   sex_of_casualty: string
   age_of_casualty: int
   age_band_of_casualty: string
-  casualty_severity: string # with mapped enchanced_casualty_severity
+  casualty_severity: string # with mapped enhanced_casualty_severity
   pedestrian_location: string
   pedestrian_movement: string
   car_passenger: string
@@ -68,6 +74,15 @@ Dim_Casualty_Profile: {
   # Columns skipped to limit project scope:
   # bus_or_coach_passenger: string
   # casualty_imd_decile: string
+  # collision_year: string
+  # collision_ref_no: string
+  # vehicle_reference: string
+  # casualty_reference: string
+  # pedestrian_road_maintenance_worker: string
+  # lsoa_of_casualty: string
+  # casualty_injury_based: string
+  # casualty_adjusted_serious: string
+  # casualty_adjusted_slight: string
 
 }
 
@@ -78,7 +93,7 @@ Dim_Vehicle_Profile: {
   junction_location: string
 
   skidding_and_overturning: string
-  hit_object_in_the_carriageway: string
+  hit_object_in_carriageway: string
   vehicle_leaving_carriageway: string
   hit_object_off_carriageway: string
   first_point_of_impact: string
@@ -94,15 +109,21 @@ Dim_Vehicle_Profile: {
 
   # Columns skipped to limit project scope:
   # towing_and_articulation: string
-  # vehicle_manouvre
-  # vehicle_direction_from
-  # vehicle_driection_to
-  # vehicle_location_restricted_lane
+  # vehicle_manoeuvre: string
+  # vehicle_direction_from: string
+  # vehicle_direction_to: string
+  # vehicle_location_restricted_lane: string
   # journey_purpose_of_driver: string
   # generic_make_model: string
   # driver_imd_decile: string
   # escooter_flag: boolean
   # lsoa_of_driver: string
+  # collision_year: string
+  # collision_ref_no: string
+  # vehicle_reference: string
+  # vehicle_manoeuvre_historic: string
+  # vehicle_location_restricted_lane_historic: string
+  # journey_purpose_of_driver_historic: string
 
   # Added columns not present in source:
   engine_capacity_banding: string
@@ -140,6 +161,9 @@ Dim_Location: {
   # local_authority_highway: string
   # urban_or_rural_area: string
   # lsoa_of_accident_location: string
+  # local_authority_ons_district: string
+  # local_authority_highway_current: string
+  # lsoa_of_collision_location: string
 }
 
 Dim_Infrastructures: {
@@ -156,6 +180,10 @@ Dim_Infrastructures: {
   # first_road_number: string
   # second_road_class: string
   # second_road_number: string
+  # junction_detail_historic: string
+  # pedestrian_crossing_human_control_historic: string
+  # pedestrian_crossing_physical_facilities_historic: string
+  # trunk_road_flag: string
 }
 
 Dim_Conditions: {
@@ -165,7 +193,8 @@ Dim_Conditions: {
   weather_conditions: string
   road_surface_conditions: string
   special_conditions_at_site: string
-  carriageway_hazards: string
+  carriageway_hazards: string # with mapped carriageway_hazards_historic
+
 }
 
 
