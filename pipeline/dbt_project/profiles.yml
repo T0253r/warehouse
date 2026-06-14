@@ -1,6 +1,0 @@
-duck_warehouse:
-  target: dev
-  outputs:
-    dev:
-      type: duckdb
-      path: "{{ env_var('MAIN_PROJECT_ROOT_DIR') }}/data/duck_warehouse.duckdb"

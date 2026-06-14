@@ -1,8 +1,7 @@
-name: 'duck_warehouse'
+name: 'stats19_warehouse'
 version: '1.0.0'
 config-version: 2
-
-profile: 'duck_warehouse'
+profile: 'warehouse'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -10,8 +9,6 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
-packages-install-path: "{{ env_var('DBT_PROJECT_DIR') }}/dbt_packages"
 
 models:
   duck_warehouse:
