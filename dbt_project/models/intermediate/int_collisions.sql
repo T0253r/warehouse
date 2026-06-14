@@ -25,7 +25,7 @@ select
     -- Foreign keys
     {{ dbt_utils.generate_surrogate_key(['c.date']) }} as date_key,
     {{ dbt_utils.generate_surrogate_key(['c.time']) }} as time_key,
-    {{ dbt_utils.generate_surrogate_key(['c.longitude', 'c.latitude']) }} as location_key,
+    {{ dbt_utils.generate_surrogate_key(['c.longitude', 'c.latitude', 'c.police_force', 'c.local_authority_district']) }} as location_key,
     {{ dbt_utils.generate_surrogate_key(['c.road_type', 'c.speed_limit', 'c.junction_detail', 'c.junction_control']) }} as infrastructure_key,
     {{ dbt_utils.generate_surrogate_key(['c.light_conditions', 'c.weather_conditions', 'c.road_surface_conditions', 'c.special_conditions_at_site', 'c.carriageway_hazards']) }} as condition_key,
 

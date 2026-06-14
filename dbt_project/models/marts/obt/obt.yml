@@ -26,6 +26,9 @@ models:
     columns:
       - name: collision_index
         description: "Unique identifier for the collision."
+        tests:
+          - unique
+          - not_null
         meta:
           metrics:
             total_collisions:
@@ -197,6 +200,9 @@ models:
     columns:
       - name: vehicle_involvement_key
         description: "Primary key representing a vehicle's involvement in a specific collision."
+        tests:
+          - unique
+          - not_null
         meta:
           metrics:
             total_vehicles_involved:
@@ -410,6 +416,9 @@ models:
     columns:
       - name: casualty_involvement_key
         description: "Primary key representing a casualty's involvement in a specific collision."
+        tests:
+          - unique
+          - not_null
         meta:
           metrics:
             total_casualties_involved:

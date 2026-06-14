@@ -4,33 +4,98 @@ models:
   - name: dim_casualty_profile
     meta:
       hidden: true
+    columns:
+      - name: casualty_profile_key
+        tests:
+          - unique
+          - not_null
+
   - name: dim_vehicle_profile
     meta:
       hidden: true
+    columns:
+      - name: vehicle_profile_key
+        tests:
+          - unique
+          - not_null
+
   - name: dim_collision_dynamics
     meta:
       hidden: true
+    columns:
+      - name: dynamics_key
+        tests:
+          - unique
+          - not_null
+
   - name: dim_date
     meta:
       hidden: true
+    columns:
+      - name: date_key
+        tests:
+          - unique
+          - not_null
+
   - name: dim_time
     meta:
       hidden: true
+    columns:
+      - name: time_key
+        tests:
+          - unique
+          - not_null
+
   - name: dim_location
     meta:
       hidden: true
+    columns:
+      - name: location_key
+        tests:
+          - unique
+          - not_null
+
   - name: dim_infrastructures
     meta:
       hidden: true
+    columns:
+      - name: infrastructure_key
+        tests:
+          - unique
+          - not_null
+
   - name: dim_conditions
     meta:
       hidden: true
+    columns:
+      - name: condition_key
+        tests:
+          - unique
+          - not_null
+
   - name: fact_collision
     meta:
       hidden: true
+    columns:
+      - name: collision_key
+        tests:
+          - unique
+          - not_null
+
   - name: fact_vehicle_involvement
     meta:
       hidden: true
+    columns:
+      - name: vehicle_involvement_key
+        tests:
+          - unique
+          - not_null
+
   - name: fact_casualty_involvement
     meta:
       hidden: true
+    columns:
+      - name: casualty_involvement_key
+        tests:
+          - unique
+          - not_null
