@@ -2,9 +2,9 @@ with stg_vehicles as (
     select * from {{ ref('stg_dft__vehicles') }}
 ),
 
-dim_vehicle as (
+dim_vehicle_profile as (
     select
-        vehicle_key,  -- Primary key (already generated in staging)
+        vehicle_key as vehicle_profile_key,
         
         vehicle_type,
         engine_capacity_cc,
@@ -20,4 +20,4 @@ dim_vehicle as (
     from stg_vehicles
 )
 
-select * from dim_vehicle
+select * from dim_vehicle_profile

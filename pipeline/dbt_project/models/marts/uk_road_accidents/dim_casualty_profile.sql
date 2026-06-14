@@ -2,9 +2,9 @@ with stg_casualties as (
     select * from {{ ref('stg_dft__casualties') }}
 ),
 
-dim_casualty as (
+dim_casualty_profile as (
     select
-        casualty_key,  -- Primary key (already generated in staging)
+        casualty_key as casualty_profile_key,
 
         casualty_class,
         casualty_type,
@@ -16,4 +16,4 @@ dim_casualty as (
     from stg_casualties
 )
 
-select * from dim_casualty
+select * from dim_casualty_profile

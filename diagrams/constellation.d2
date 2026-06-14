@@ -8,7 +8,7 @@ Fact_Collision: {
   date_key: string {constraint: foreign_key}
   time_key: string {constraint: foreign_key}
   location_key: string {constraint: foreign_key}
-  infrasturcture_key: string {constraint: foreign_key}
+  infrastructure_key: string {constraint: foreign_key}
   condition_key: string {constraint: foreign_key}
   # collision_severity: string
   number_of_vehicles: int
@@ -19,23 +19,35 @@ Fact_Collision: {
 
 Fact_Vehicle_Involvement: {
   shape: sql_table
-  vehicle_key: string {constraint: primary_key}
+  vehicle_involvement_key: string {constraint: primary_key}
   collision_key: string {constraint: foreign_key}
+  date_key: string {constraint: foreign_key}
+  time_key: string {constraint: foreign_key}
+  location_key: string {constraint: foreign_key}
+  infrastructure_key: string {constraint: foreign_key}
+  condition_key: string {constraint: foreign_key}
+  vehicle_profile_key: string {constraint: foreign_key}
   motion_key: string {constraint: foreign_key}
   dynamics_key: string {constraint: foreign_key}
 }
 
 Fact_Casualty_Involvement: {
   shape: sql_table
-  casualty_key: string {constraint: primary_key}
+  casualty_involvement_key: string {constraint: primary_key}
   collision_key: string {constraint: foreign_key}
-  vehicle_key: string {constraint: foreign_key}
+  date_key: string {constraint: foreign_key}
+  time_key: string {constraint: foreign_key}
+  location_key: string {constraint: foreign_key}
+  infrastructure_key: string {constraint: foreign_key}
+  condition_key: string {constraint: foreign_key}
+  casualty_profile_key: string {constraint: foreign_key}
+  vehicle_profile_key: string {constraint: foreign_key}
 }
 
 # Dimension Tables
-Dim_Casualty: {
+Dim_Casualty_Profile: {
   shape: sql_table
-  casualty_key: string {constraint: primary_key}
+  casualty_profile_key: string {constraint: primary_key}
   casualty_class: string
   casualty_type: string
   sex_of_casualty: string
@@ -50,9 +62,9 @@ Dim_Casualty: {
   # casualty_distance_banding: string
 }
 
-Dim_Vehicle: {
+Dim_Vehicle_Profile: {
   shape: sql_table
-  vehicle_key: string {constraint: primary_key}
+  vehicle_profile_key: string {constraint: primary_key}
   vehicle_type: string
   # is_escooter: boolean
   engine_capacity_cc: int
@@ -69,7 +81,7 @@ Dim_Vehicle: {
   driver_distance_banding: string
 }
 
-Dim_Date: {
+Dim_Dates: {
   shape: sql_table
   date_key: string {constraint: primary_key}
   collision_date: date
@@ -77,13 +89,13 @@ Dim_Date: {
   day_of_week: string
 }
 
-Dim_Time: {
+Dim_Times: {
   shape: sql_table
   time_key: string {constraint: primary_key}
   collision_time: time
 }
 
-Dim_Location: {
+Dim_Locations: {
   shape: sql_table
   location_key: string {constraint: primary_key}
   longitude: float
@@ -97,9 +109,9 @@ Dim_Location: {
   # lsoa_of_accident_location: string
 }
 
-Dim_Infrastructure: {
+Dim_Infrastructures: {
   shape: sql_table
-  infrasturcture_key: string {constraint: primary_key}
+  infrastructure_key: string {constraint: primary_key}
   first_road_class: string
   first_road_number: string
   second_road_class: string
@@ -111,7 +123,7 @@ Dim_Infrastructure: {
   # pedestrian_crossing: string
 }
 
-Dim_Condition: {
+Dim_Conditions: {
   shape: sql_table
   condition_key: string {constraint: primary_key}
   light_conditions: string
@@ -141,22 +153,40 @@ Dim_Collision_Dynamics: {
   first_point_of_impact: string
 }
 
-# Dimensions to Fact_Collision (Level 1 Grain)
-Dim_Date.date_key -> Fact_Collision.date_key
-Dim_Time.time_key -> Fact_Collision.time_key
-Dim_Location.location_key -> Fact_Collision.location_key
-Dim_Infrastructure.infrasturcture_key -> Fact_Collision.infrasturcture_key
-Dim_Condition.condition_key -> Fact_Collision.condition_key
+# --------------------------------------------------------
+# RELATIONSHIPS
+# --------------------------------------------------------
 
-# Dimensions to Fact_Vehicle_Involvement (Level 2 Grain)
-Dim_Vehicle.vehicle_key -> Fact_Vehicle_Involvement.vehicle_key
+# Core Context Conformed Dimensions (Linked to all 3 Facts)
+Dim_Dates.date_key -> Fact_Collision.date_key
+Dim_Dates.date_key -> Fact_Vehicle_Involvement.date_key
+Dim_Dates.date_key -> Fact_Casualty_Involvement.date_key
+
+Dim_Times.time_key -> Fact_Collision.time_key
+Dim_Times.time_key -> Fact_Vehicle_Involvement.time_key
+Dim_Times.time_key -> Fact_Casualty_Involvement.time_key
+
+Dim_Locations.location_key -> Fact_Collision.location_key
+Dim_Locations.location_key -> Fact_Vehicle_Involvement.location_key
+Dim_Locations.location_key -> Fact_Casualty_Involvement.location_key
+
+Dim_Infrastructures.infrastructure_key -> Fact_Collision.infrastructure_key
+Dim_Infrastructures.infrastructure_key -> Fact_Vehicle_Involvement.infrastructure_key
+Dim_Infrastructures.infrastructure_key -> Fact_Casualty_Involvement.infrastructure_key
+
+Dim_Conditions.condition_key -> Fact_Collision.condition_key
+Dim_Conditions.condition_key -> Fact_Vehicle_Involvement.condition_key
+Dim_Conditions.condition_key -> Fact_Casualty_Involvement.condition_key
+
+# Conformed Profile Dimensions
+Dim_Vehicle_Profile.vehicle_profile_key -> Fact_Vehicle_Involvement.vehicle_profile_key
+Dim_Vehicle_Profile.vehicle_profile_key -> Fact_Casualty_Involvement.vehicle_profile_key
+
+# Specific Dimensions to Level 2 Grain Facts
+Dim_Casualty_Profile.casualty_profile_key -> Fact_Casualty_Involvement.casualty_profile_key
 Dim_Pre_Collision_Motion.motion_key -> Fact_Vehicle_Involvement.motion_key
 Dim_Collision_Dynamics.dynamics_key -> Fact_Vehicle_Involvement.dynamics_key
 
-# Dimensions to Fact_Casualty_Involvement (Level 2 Grain)
-Dim_Casualty.casualty_key -> Fact_Casualty_Involvement.casualty_key
-Dim_Vehicle.vehicle_key -> Fact_Casualty_Involvement.vehicle_key
-
-# Fact to Fact Relationships (Factless Fact Link)
+# Fact to Fact Relationships (Retained Fact Links)
 Fact_Collision.collision_key -> Fact_Vehicle_Involvement.collision_key
 Fact_Collision.collision_key -> Fact_Casualty_Involvement.collision_key

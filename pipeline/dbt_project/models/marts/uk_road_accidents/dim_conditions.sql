@@ -2,7 +2,7 @@ with stg_collisions as (
     select * from {{ ref('stg_dft__collisions') }}
 ),
 
-dim_condition as (
+dim_conditions as (
     select distinct
         {{ dbt_utils.generate_surrogate_key([
             'light_conditions', 
@@ -17,4 +17,4 @@ dim_condition as (
     from stg_collisions
 )
 
-select * from dim_condition
+select * from dim_conditions
