@@ -31,7 +31,6 @@ Fact_Collision: {
 Fact_Vehicle_Involvement: {
   shape: sql_table
   vehicle_involvement_key: string {constraint: primary_key}
-  collision_key: string {constraint: foreign_key}
   collision_index: string {constraint: business_key}
   date_key: string {constraint: foreign_key}
   time_key: string {constraint: foreign_key}
@@ -39,14 +38,12 @@ Fact_Vehicle_Involvement: {
   infrastructure_key: string {constraint: foreign_key}
   condition_key: string {constraint: foreign_key}
   vehicle_profile_key: string {constraint: foreign_key}
-  motion_key: string {constraint: foreign_key}
   dynamics_key: string {constraint: foreign_key}
 }
 
 Fact_Casualty_Involvement: {
   shape: sql_table
   casualty_involvement_key: string {constraint: primary_key}
-  collision_key: string {constraint: foreign_key}
   collision_index: string {constraint: business_key}
   date_key: string {constraint: foreign_key}
   time_key: string {constraint: foreign_key}
@@ -91,13 +88,6 @@ Dim_Vehicle_Profile: {
   vehicle_profile_key: string {constraint: primary_key}
   vehicle_type: string
   junction_location: string
-
-  skidding_and_overturning: string
-  hit_object_in_carriageway: string
-  vehicle_leaving_carriageway: string
-  hit_object_off_carriageway: string
-  first_point_of_impact: string
-
   vehicle_left_hand_drive: string
   sex_of_driver: string
   age_of_driver: int
@@ -128,6 +118,17 @@ Dim_Vehicle_Profile: {
   # Added columns not present in source:
   engine_capacity_banding: string
   age_band_of_vehicle: string
+
+}
+
+Dim_Collision_Dynamics: {
+  shape: sql_table
+  dynamics_key: string {constraint: primary_key}
+  skidding_and_overturning: string
+  hit_object_in_carriageway: string
+  vehicle_leaving_carriageway: string
+  hit_object_off_carriageway: string
+  first_point_of_impact: string
 
 }
 
@@ -224,12 +225,14 @@ Fact_Casualty_Involvement.vehicle_profile_key -- Dim_Vehicle_Profile.vehicle_pro
 
 Fact_Casualty_Involvement.casualty_profile_key -- Dim_Casualty_Profile.casualty_profile_key
 
-Fact_Collision.collision_key -- Fact_Vehicle_Involvement.collision_key {
+Fact_Vehicle_Involvement.dynamics_key -- Dim_Collision_Dynamics.dynamics_key
+
+Fact_Collision.collision_index -- Fact_Vehicle_Involvement.collision_index {
   style: {
     stroke-dash: 3
   }
 }
-Fact_Collision.collision_key -- Fact_Casualty_Involvement.collision_key {
+Fact_Collision.collision_index -- Fact_Casualty_Involvement.collision_index {
   style: {
     stroke-dash: 3
   }
