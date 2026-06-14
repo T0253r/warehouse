@@ -1,26 +1,32 @@
 direction: right
 
-# Fact Tables
 Fact_Collision: {
   shape: sql_table
   collision_key: string {constraint: primary_key}
-  collision_index: string 
+  collision_index: string {constraint: business_key}
   date_key: string {constraint: foreign_key}
   time_key: string {constraint: foreign_key}
   location_key: string {constraint: foreign_key}
   infrastructure_key: string {constraint: foreign_key}
   condition_key: string {constraint: foreign_key}
-  # collision_severity: string
   number_of_vehicles: int
   number_of_casualties: int
+
+  # Columns skipped to limit project scope:
+  # collision_severity: string
   # enhanced_severity_collision: string
   # collision_injury_based: string
+
+  # Added columns not present in source:
+  number_of_fatalities: int
+
 }
 
 Fact_Vehicle_Involvement: {
   shape: sql_table
   vehicle_involvement_key: string {constraint: primary_key}
   collision_key: string {constraint: foreign_key}
+  collision_index: string {constraint: business_key}
   date_key: string {constraint: foreign_key}
   time_key: string {constraint: foreign_key}
   location_key: string {constraint: foreign_key}
@@ -35,6 +41,7 @@ Fact_Casualty_Involvement: {
   shape: sql_table
   casualty_involvement_key: string {constraint: primary_key}
   collision_key: string {constraint: foreign_key}
+  collision_index: string {constraint: business_key}
   date_key: string {constraint: foreign_key}
   time_key: string {constraint: foreign_key}
   location_key: string {constraint: foreign_key}
@@ -44,7 +51,6 @@ Fact_Casualty_Involvement: {
   vehicle_profile_key: string {constraint: foreign_key}
 }
 
-# Dimension Tables
 Dim_Casualty_Profile: {
   shape: sql_table
   casualty_profile_key: string {constraint: primary_key}
@@ -53,36 +59,55 @@ Dim_Casualty_Profile: {
   sex_of_casualty: string
   age_of_casualty: int
   age_band_of_casualty: string
-  casualty_severity: string
-  # pedestrian_location: string
-  # pedestrian_movement: string
-  # car_passenger: string
+  casualty_severity: string # with mapped enchanced_casualty_severity
+  pedestrian_location: string
+  pedestrian_movement: string
+  car_passenger: string
+  casualty_distance_banding: string
+
+  # Columns skipped to limit project scope:
   # bus_or_coach_passenger: string
   # casualty_imd_decile: string
-  # casualty_distance_banding: string
+
 }
 
 Dim_Vehicle_Profile: {
   shape: sql_table
   vehicle_profile_key: string {constraint: primary_key}
   vehicle_type: string
-  # is_escooter: boolean
-  engine_capacity_cc: int
-  engine_capacity_band: string
-  propulsion_code: string
-  age_of_vehicle: int
-  age_band_of_vehicle_band: string
-  generic_make_model: string
-  # towing_and_articulation: string
+  junction_location: string
+
+  skidding_and_overturning: string
+  hit_object_in_the_carriageway: string
+  vehicle_leaving_carriageway: string
+  hit_object_off_carriageway: string
+  first_point_of_impact: string
+
   vehicle_left_hand_drive: string
   sex_of_driver: string
   age_of_driver: int
   age_band_of_driver: string
-  # journey_purpose_of_driver: string
-  # driver_imd_decile: string
+  engine_capacity_cc: int
+  propulsion_code: string
+  age_of_vehicle: int
   driver_distance_banding: string
-  junction_location: string
-  first_point_of_impact: string
+
+  # Columns skipped to limit project scope:
+  # towing_and_articulation: string
+  # vehicle_manouvre
+  # vehicle_direction_from
+  # vehicle_driection_to
+  # vehicle_location_restricted_lane
+  # journey_purpose_of_driver: string
+  # generic_make_model: string
+  # driver_imd_decile: string
+  # escooter_flag: boolean
+  # lsoa_of_driver: string
+
+  # Added columns not present in source:
+  engine_capacity_banding: string
+  age_band_of_vehicle: string
+
 }
 
 Dim_Date: {
@@ -106,10 +131,12 @@ Dim_Location: {
   location_key: string {constraint: primary_key}
   longitude: float
   latitude: float
-  # location_easting_osgr: string
-  # location_northing_osgr: string
   police_force: string
   local_authority_district: string
+
+  # Columns skipped to limit project scope:
+  # location_easting_osgr: string
+  # location_northing_osgr: string
   # local_authority_highway: string
   # urban_or_rural_area: string
   # lsoa_of_accident_location: string
@@ -118,15 +145,17 @@ Dim_Location: {
 Dim_Infrastructures: {
   shape: sql_table
   infrastructure_key: string {constraint: primary_key}
-  first_road_class: string
-  first_road_number: string
-  second_road_class: string
-  second_road_number: string
   road_type: string
   speed_limit: int
   junction_detail: string
   junction_control: string
+
+  # Columns skipped to limit project scope:
   # pedestrian_crossing: string
+  # first_road_class: string
+  # first_road_number: string
+  # second_road_class: string
+  # second_road_number: string
 }
 
 Dim_Conditions: {
@@ -140,30 +169,31 @@ Dim_Conditions: {
 }
 
 
-Dim_Date.date_key -- Fact_Collision.date_key
+Fact_Collision.date_key -- Dim_Date.date_key
+Fact_Collision.time_key -- Dim_Time.time_key
+Fact_Collision.location_key -- Dim_Location.location_key
+Fact_Collision.infrastructure_key -- Dim_Infrastructures.infrastructure_key
+Fact_Collision.condition_key -- Dim_Conditions.condition_key
+
 Dim_Date.date_key -- Fact_Vehicle_Involvement.date_key
 Dim_Date.date_key -- Fact_Casualty_Involvement.date_key
 
-Dim_Time.time_key -- Fact_Collision.time_key
 Dim_Time.time_key -- Fact_Vehicle_Involvement.time_key
 Dim_Time.time_key -- Fact_Casualty_Involvement.time_key
 
-Dim_Location.location_key -- Fact_Collision.location_key
 Dim_Location.location_key -- Fact_Vehicle_Involvement.location_key
 Dim_Location.location_key -- Fact_Casualty_Involvement.location_key
 
-Dim_Infrastructures.infrastructure_key -- Fact_Collision.infrastructure_key
 Dim_Infrastructures.infrastructure_key -- Fact_Vehicle_Involvement.infrastructure_key
 Dim_Infrastructures.infrastructure_key -- Fact_Casualty_Involvement.infrastructure_key
 
-Dim_Conditions.condition_key -- Fact_Collision.condition_key
 Dim_Conditions.condition_key -- Fact_Vehicle_Involvement.condition_key
 Dim_Conditions.condition_key -- Fact_Casualty_Involvement.condition_key
 
-Dim_Vehicle_Profile.vehicle_profile_key -- Fact_Vehicle_Involvement.vehicle_profile_key
-Dim_Vehicle_Profile.vehicle_profile_key -- Fact_Casualty_Involvement.vehicle_profile_key
+Fact_Vehicle_Involvement.vehicle_profile_key -- Dim_Vehicle_Profile.vehicle_profile_key
+Fact_Casualty_Involvement.vehicle_profile_key -- Dim_Vehicle_Profile.vehicle_profile_key
 
-Dim_Casualty_Profile.casualty_profile_key -- Fact_Casualty_Involvement.casualty_profile_key
+Fact_Casualty_Involvement.casualty_profile_key -- Dim_Casualty_Profile.casualty_profile_key
 
 Fact_Collision.collision_key -- Fact_Vehicle_Involvement.collision_key {
   style: {
