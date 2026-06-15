@@ -95,7 +95,7 @@ pip install .
 
 ### 2. Pobranie danych źródłowych
 Dane wejściowe pochodzą z oficjalnego portalu brytyjskiego [UK Road Safety Open Data](https://www.gov.uk/government/statistical-data-sets/road-safety-open-data).
-Należy pobrać odpowiednie pliki CSV (wypadki/collisions, pojazdy/vehicles, ofiary/casualties) i umieścić je w katalogu `~/data/dft_incremental/`. Wzorce nazw plików to:
+Należy pobrać odpowiednie pliki CSV (wypadki/collisions, pojazdy/vehicles, ofiary/casualties) i umieścić je w katalogu `~/data/dft-incremental/`. Wzorce nazw plików to:
 - `dft-road-casualty-statistics-collision-*.csv`
 - `dft-road-casualty-statistics-casualty-*.csv`
 - `dft-road-casualty-statistics-vehicle-*.csv`
