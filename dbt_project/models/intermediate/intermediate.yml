@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_casualties
+    meta:
+      hidden: true
+    columns:
+      - name: collision_index
+        description: "Collision index identifier"
+
+  - name: int_collisions
+    meta:
+      hidden: true
+    columns:
+      - name: collision_index
+        description: "Collision index identifier"
+
+  - name: int_vehicles
+    meta:
+      hidden: true
+    columns:
+      - name: collision_index
+        description: "Collision index identifier"
