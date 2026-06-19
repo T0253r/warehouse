@@ -20,6 +20,18 @@ Poniższe drzewo przedstawia strukturę plików w katalogu `dbt_project/` wraz z
 
 ```text
 dbt_project/
+├── macros/                       # Makra Jinja/SQL wielokrotnego użytku
+│   └── map_ids.sql               # Makro mapujące identyfikatory słownikowe na czytelne etykiety
+│
+├── seeds/                        # Pliki referencyjne i słowniki (Seedy) ładowane bezpośrednio do bazy
+│   └── dft_data_guide/
+│       └── seed_data_guide.csv   # Oficjalny słownik wartości i kodów dla atrybutów Stats19
+│
+├── tests/                        # Niestandardowe testy poprawności danych (asercje SQL)
+│   ├── assert_fatalities_less_than_casualties.sql
+│   ├── assert_positive_number_of_vehicles.sql
+│   └── assert_valid_coordinates.sql
+│
 └── models/
     ├── staging/                  # Warstwa wejściowa (Staging) - definicje zewnętrznych źródeł
     │   ├── src_stats19.yml       # Konfiguracja zewnętrznych plików CSV i ich parametrów
@@ -47,37 +59,128 @@ dbt_project/
 
 ## Wykorzystane Technologie
 
-Główne elementy potoku danych to:
+### 1. DuckDB ([link do dokumentacji](https://duckdb.org/docs/))
+**DuckDB** to nowoczesny, analityczny system zarządzania bazą danych, niejako "OLAP'owy SQLite". Został zaprojektowany z myślą o maksymalnej wydajności przetwarzania dużych zbiorów danych bezpośrednio w pamięci procesów aplikacji, bez konieczności utrzymywania dedykowanego serwera bazodanowego.
 
-### 1. [DuckDB](https://duckdb.org/docs/)
-DuckDB to analityczny system zarządzania relacyjnymi bazami danych działający wewnątrz procesu (in-process). Wykorzystuje wektorowy silnik zapytań zoptymalizowany pod kątem obciążeń OLAP. Pozwala na przetwarzanie dużych wolumenów danych bez konieczności wdrażania dedykowanego serwera bazodanowego.
+#### Kluczowe cechy z perspektywy hurtowni danych:
+* **Architektura Kolumnowa (Column-store):** Podobnie jak klasyczne hurtownie danych (np. Snowflake, Teradata, ClickHouse), DuckDB przechowuje i przetwarza dane kolumnowo, co drastycznie przyspiesza zapytania agregujące i analityczne.
+* **Wektorowe Przetwarzanie Zapytań:** Wykorzystuje nowoczesne instrukcje procesora (SIMD) do przetwarzania danych w paczkach (wektorach), minimalizując narzut systemowy.
+* **Pełny, Standardowy SQL:** Wspiera zaawansowany SQL, w tym funkcje okna (Window Functions), zapytania zagnieżdżone (CTE) oraz złożone złączenia (JOINs).
+* **Wbudowana Integracja z Nowoczesnym Ekosystemem:** Baza natywnie i bezstratnie współpracuje z formatami takimi jak **Parquet, CSV, JSON** oraz technologiami **Arrow, Pandas czy Polars**, pozwalając na odpytywanie plików bezpośrednio, bez konieczności ich wcześniejszego importu (Query-in-Place).
+* **Brak Serwera (Serverless/Embedded):** Działa wewnątrz procesu aplikacji (np. skryptu Pythona, aplikacji w dbt czy BI). Nie wymaga instalacji, konfiguracji uprawnień ani zarządzania klastrem.
 
-### 2. [MotherDuck](https://motherduck.com/)
+### 2. MotherDuck ([link do dokumentacji](https://motherduck.com/))
 MotherDuck to chmurowa platforma bazodanowa ściśle zintegrowana z DuckDB. Umożliwia hostowanie baz danych w chmurze, bezserwerowe wykonywanie zapytań SQL oraz realizację zapytań hybrydowych (łączących lokalne dane z danymi w chmurze). W projekcie stanowi docelowe środowisko produkcyjne.
 
-### 3. [dbt (Data Build Tool)](https://docs.getdbt.com/)
+### 3. dbt (Data Build Tool) ([link do dokumentacji](https://docs.getdbt.com/))
 dbt to framework do zarządzania transformacjami danych wewnątrz bazy danych (warstwa Transform w architekturze ELT). Umożliwia pisanie transformacji w formie parametryzowanych zapytań SQL z wykorzystaniem języka szablonów Jinja. 
 
-W dbt modele danych definiuje się jako niezależne zapytania `SELECT`. System automatycznie generuje skierowany graf acykliczny (DAG), zarządzając kolejnością materializacji obiektów bazy danych na podstawie ich wzajemnych zależności. Projekt wykorzystuje trzy kluczowe mechanizmy dbt:
+W dbt modele danych definiuje się jako niezależne zapytania `SELECT`. System automatycznie generuje skierowany graf acykliczny (DAG), zarządzając kolejnością materializacji obiektów bazy danych na podstawie ich wzajemnych zależności. Projekt wykorzystuje następujące mechanizmy dbt:
 
 - **Modele Inkrementalne:**
-  Mechanizm materializacji ładujący do docelowej tabeli jedynie nowe lub zmodyfikowane rekordy z warstwy źródłowej, zamiast wykonywania operacji na pełnym zbiorze (*full refresh*). Wykorzystuje strategię *idempotent append* w oparciu o unikalny klucz główny. Optymalizuje to zużycie zasobów podczas przetwarzania przyrostowego.
+  Mechanizm materializacji ładujący do docelowej tabeli jedynie nowe lub zmodyfikowane rekordy z warstwy źródłowej, zamiast wykonywania operacji na pełnym zbiorze (*full refresh*). Optymalizuje to zużycie zasobów i czas wykonywania zapytań przyrostowych.
+  
+  *Przykład implementacji (`models/marts/constellation/fact_collision.sql`):*
+  ```sql
+  {{ config(
+      materialized='incremental',
+      incremental_strategy='append'
+  ) }}
+
+  WITH source_data AS (
+      select * from {{ ref('int_collisions') }}
+  )
+  SELECT * FROM source_data
+  {% if is_incremental() %}
+      WHERE NOT EXISTS (
+          SELECT 1 
+          FROM {{ this }} AS target_table 
+          WHERE source_data.collision_key = target_table.collision_key
+      )
+  {% endif %}
+  ```
+
 - **Testowanie Jakości Danych:**
-  System obsługuje asercje danych definiowane na dwóch poziomach:
-  - *Testy generyczne:* Deklaratywne reguły konfigurowane w plikach YAML (np. weryfikacja unikalności kluczy, braku wartości NULL, sprawdzanie integralności referencyjnej z tabelami wymiarów).
-  - *Testy niestandardowe:* Bezpośrednie zapytania SQL uruchamiane w ramach cyklu przetwarzania, które wymuszają sprawdzenie specyficznych ograniczeń biznesowych, zwracając błąd w przypadku zidentyfikowania odchyleń.
+  System obsługuje automatyczne testowanie poprawności i spójności danych:
+  - *Testy generyczne (deklaratywne):* Definiowane w plikach konfiguracyjnych YAML, pozwalające na szybkie asercje takie jak unikalność wartości czy brak wartości NULL.
+  - *Testy niestandardowe (singular):* Dedykowane zapytania SQL, które w przypadku wykrycia błędnych wierszy powodują niepowodzenie testu.
+  
+  *Przykład testu generycznego (`models/marts/constellation/constellation.yml`):*
+  ```yaml
+  models:
+    - name: dim_casualty_profile
+      columns:
+        - name: casualty_profile_key
+          tests:
+            - unique
+            - not_null
+  ```
+  
+  *Przykład testu niestandardowego (`tests/assert_positive_number_of_vehicles.sql`):*
+  ```sql
+  select
+      collision_index,
+      number_of_vehicles
+  from {{ ref('fact_collision') }}
+  where number_of_vehicles < 1
+  ```
+
 - **Separacja środowisk (Targets):**
-  Konfiguracja profili połączeń pozwala na przełączanie bazy docelowej za pomocą parametru `--target`. Domyślne uruchomienie wykonuje transformacje na lokalnej bazie DuckDB (środowisko deweloperskie), natomiast wskazanie `--target prod` przenosi wykonanie zapytań i zapis wyników do chmurowej bazy MotherDuck, bez konieczności modyfikacji kodu SQL modeli.
+  Konfiguracja połączeń pozwala na przełączanie baz docelowych bez zmiany logiki modeli transformacji. Uruchomienie komendy dbt z parametrem `--target prod` automatycznie wykonuje transformacje w chmurze (MotherDuck) zamiast w lokalnej bazie.
+  
+  *Przykład konfiguracji (`~/.dbt/profiles.yml`):*
+  ```yaml
+  warehouse:
+    target: dev
+    outputs:
+      dev:
+        type: duckdb
+        path: "/sciezka/do/lokalnego/pliku/stats19.duckdb"
+      prod:
+        type: duckdb
+        path: "md:stats19?motherduck_token=<TWÓJ_TOKEN_MOTHERDUCK>"
+  ```
 
-Uruchamianie testów blokuje przetwarzanie niespójnych danych w dalszych etapach potoku. Ponadto narzędzie generuje dokumentację na podstawie kodu i konfiguracji w plikach projektu.
+- **Makra:**
+  Funkcje i szablony pisane w języku Jinja, ułatwiające ponowne użycie kodu SQL. W projekcie makro jest wykorzystywane m.in. do automatycznego dekodowania identyfikatorów na czytelne etykiety z poziomu słownika.
+  
+  *Przykład implementacji (`macros/map_ids.sql`):*
+  ```sql
+  {% macro map_id(table_name, field_name, source_column=none) %}
+      {%- if source_column is none -%}
+          {%- set source_column = field_name -%}
+      {%- endif -%}
+      (
+          select label 
+          from {{ ref('seed_data_guide') }} 
+          where "table" = '{{ table_name }}' 
+            and "field name" = '{{ field_name }}' 
+            and "code/format" = cast({{ source_column }} as varchar)
+      )
+  {% endmacro %}
+  ```
 
-### 4. [Lightdash](https://docs.lightdash.com/)
+- **Seedy (Seeds):**
+  Pliki CSV z danymi referencyjnymi (np. słowniki, mapowania), wersjonowane bezpośrednio w repozytorium Git, które dbt potrafi załadować do bazy danych jako zwykłe tabele i na które można powołać się za pomocą funkcji `ref()`.
+  
+  *Przykład zawartości pliku słownika (`seeds/dft_data_guide/seed_data_guide.csv`):*
+  ```csv
+  table,field name,code/format,label,note
+  collision,police_force,1,Metropolitan Police,
+  collision,police_force,3,Cumbria,
+  collision,collision_severity,1,Fatal,
+  ```
+
+### 4. Lightdash ([link do dokumentacji](https://docs.lightdash.com/))
 Lightdash to platforma Business Intelligence natywnie zintegrowana z dbt. Umożliwia definiowanie metryk i wymiarów analitycznych bezpośrednio w plikach konfiguracyjnych YAML warstwy semantycznej projektu dbt. Definicje te stanowią wspólne źródło prawdy, na podstawie których narzędzie dynamicznie generuje zapytania SQL odpowiedzialne za renderowanie elementów interfejsu wizualnego.
 
-## Główne cechy potoku danych
+## Główne zalety stosu technologicznego
 1. **Deklaratywność i wersjonowanie:** Schemat bazy, reguły transformacji oraz definicje raportów są w całości opisane w kodzie i wersjonowane w systemie Git.
-2. **Weryfikacja danych:** Testy poprawności i relacji są automatycznie wykonywane podczas każdego uruchomienia potoku transformacji.
-3. **Wydajność lokalna:** Przetwarzanie i agregowanie milionów rekordów odbywa się w pamięci RAM (in-memory) na lokalnym komputerze, bez konieczności uruchamiania zewnętrznych usług lub serwerów bazodanowych.
+2. **Szeroka gama funkcji DuckDB:** DuckDB oferuje wiele przydatnych funkcji, miedzy innymi webowy interfejs do przeglądania i wykonywania zapytań SQL oraz możliwość bezpośredniego odczytu plików csv z dysku lokalnego. Jako że sama baza jest de facto plikiem na dysku jest ona niezwykle prosta w obsłudze.
+3. **Łatwe zarządzanie materializacją modeli:** dbt umożliwia proste defniowanie i zmianę sposobu materializacji modeli. Każdy model moży być zmaterializowany jako tabela (table), widok (view), widok zmaterializowany (materialized view) lub model przyrostowy (incremental) pozwalający na definiowanie sposobu wstawiania nowych danych.
+4. **Testowanie danych:** dbt pozwala na definiowanie zcentralizowanych testów (generycznych oraz niestandardowych, opartych o zapytania SQL) uruchamianych przy transformacjach.
+5. **Seed'y oraz makra:** Obecne w dbt seed'y (wersjonowane pliki csv z danymi) oraz makra (wielokrotnie wykorzystywany kod SQL) znacznie ułatwiają tworzenie transformacji.
+6. **Automatycznie generowana dokumentacja:** dbt pozwala na generowanie dokumentacji na podstawie kodu i konfiguracji w plikach projektu. Automatycznie generowany widok grafu zależności modeli (DAG), jasno przedstawia przepływ danych w projekcie.
 
 ## Instrukcja lokalnego uruchomienia
 
@@ -94,7 +197,7 @@ pip install .
 ```
 
 ### 2. Pobranie danych źródłowych
-Dane wejściowe pochodzą z oficjalnego portalu brytyjskiego [UK Road Safety Open Data](https://www.gov.uk/government/statistical-data-sets/road-safety-open-data).
+Dane wejściowe pochodzą z oficjalnego portalu brytyjskiego UK Road Safety Open Data ([link do portalu](https://www.gov.uk/government/statistical-data-sets/road-safety-open-data)).
 Należy pobrać odpowiednie pliki CSV (wypadki/collisions, pojazdy/vehicles, ofiary/casualties) i umieścić je w katalogu `~/data/dft-incremental/`. Wzorce nazw plików to:
 - `dft-road-casualty-statistics-collision-*.csv`
 - `dft-road-casualty-statistics-casualty-*.csv`
