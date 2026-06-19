@@ -2,8 +2,8 @@ version: 2
 
 models:
   - name: dim_casualty_profile
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: casualty_profile_key
         tests:
@@ -11,8 +11,8 @@ models:
           - not_null
 
   - name: dim_vehicle_profile
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: vehicle_profile_key
         tests:
@@ -20,8 +20,8 @@ models:
           - not_null
 
   - name: dim_collision_dynamics
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: dynamics_key
         tests:
@@ -29,8 +29,8 @@ models:
           - not_null
 
   - name: dim_date
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: date_key
         tests:
@@ -38,8 +38,8 @@ models:
           - not_null
 
   - name: dim_time
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: time_key
         tests:
@@ -47,8 +47,8 @@ models:
           - not_null
 
   - name: dim_location
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: location_key
         tests:
@@ -56,8 +56,8 @@ models:
           - not_null
 
   - name: dim_infrastructures
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: infrastructure_key
         tests:
@@ -65,8 +65,8 @@ models:
           - not_null
 
   - name: dim_conditions
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: condition_key
         tests:
@@ -74,8 +74,8 @@ models:
           - not_null
 
   - name: fact_collision
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: collision_key
         tests:
@@ -83,8 +83,8 @@ models:
           - not_null
 
   - name: fact_vehicle_involvement
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: vehicle_involvement_key
         tests:
@@ -92,8 +92,8 @@ models:
           - not_null
 
   - name: fact_casualty_involvement
-    meta:
-      hidden: true
+    config:
+      tags: ['lightdash']
     columns:
       - name: casualty_involvement_key
         tests:

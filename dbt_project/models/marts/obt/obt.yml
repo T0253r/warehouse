@@ -2,6 +2,8 @@ version: 2
 
 models:
   - name: obt_collision
+    config:
+      tags: ['lightdash']
     description: "One Big Table (OBT) model for Collision analysis, denormalizing collisions with dates, times, locations, and conditions."
     meta:
       group_details:
@@ -187,6 +189,8 @@ models:
             groups: ["conditions"]
 
   - name: obt_vehicle
+    config:
+      tags: ['lightdash']
     description: "One Big Table (OBT) model for Vehicle analysis, denormalizing vehicle involvements with collision attributes and driver demographics."
     meta:
       group_details:
@@ -426,6 +430,8 @@ models:
             groups: ["conditions"]
 
   - name: obt_casualty
+    config:
+      tags: ['lightdash']
     description: "One Big Table (OBT) model for Casualty analysis, denormalizing casualty involvements with driver/vehicle profiles and collision attributes."
     meta:
       group_details:

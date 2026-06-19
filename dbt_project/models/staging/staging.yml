@@ -2,22 +2,16 @@ version: 2
 
 models:
   - name: stg_casualties
-    meta:
-      hidden: true
     columns:
       - name: collision_index
         description: "Collision index identifier"
 
   - name: stg_collisions
-    meta:
-      hidden: true
     columns:
       - name: collision_index
         description: "Collision index identifier"
 
   - name: stg_vehicles
-    meta:
-      hidden: true
     columns:
       - name: collision_index
         description: "Collision index identifier"
