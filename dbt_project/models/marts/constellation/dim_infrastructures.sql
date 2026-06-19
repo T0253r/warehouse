@@ -6,10 +6,10 @@
 WITH source_data AS (
     select distinct
         infrastructure_key,
-        road_type,
+        {{ map_id('collision', 'road_type') }} as road_type,
         speed_limit,
-        junction_detail,
-        junction_control
+        {{ map_id('collision', 'junction_detail') }} as junction_detail,
+        {{ map_id('collision', 'junction_control') }} as junction_control
     from {{ ref('int_collisions') }}
 )
 

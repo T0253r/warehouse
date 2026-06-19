@@ -6,11 +6,11 @@
 WITH source_data AS (
     select distinct
         dynamics_key,
-        skidding_and_overturning,
-        hit_object_in_carriageway,
-        vehicle_leaving_carriageway,
-        hit_object_off_carriageway,
-        first_point_of_impact
+        {{ map_id('vehicle', 'skidding_and_overturning') }} as skidding_and_overturning,
+        {{ map_id('vehicle', 'hit_object_in_carriageway') }} as hit_object_in_carriageway,
+        {{ map_id('vehicle', 'vehicle_leaving_carriageway') }} as vehicle_leaving_carriageway,
+        {{ map_id('vehicle', 'hit_object_off_carriageway') }} as hit_object_off_carriageway,
+        {{ map_id('vehicle', 'first_point_of_impact') }} as first_point_of_impact
     from {{ ref('int_vehicles') }}
 )
 

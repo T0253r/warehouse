@@ -6,11 +6,11 @@
 WITH source_data AS (
     select distinct
         condition_key,
-        light_conditions,
-        weather_conditions,
-        road_surface_conditions,
-        special_conditions_at_site,
-        carriageway_hazards
+        {{ map_id('collision', 'light_conditions') }} as light_conditions,
+        {{ map_id('collision', 'weather_conditions') }} as weather_conditions,
+        {{ map_id('collision', 'road_surface_conditions') }} as road_surface_conditions,
+        {{ map_id('collision', 'special_conditions_at_site') }} as special_conditions_at_site,
+        {{ map_id('collision', 'carriageway_hazards') }} as carriageway_hazards
     from {{ ref('int_collisions') }}
 )
 

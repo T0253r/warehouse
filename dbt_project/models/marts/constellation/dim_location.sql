@@ -8,8 +8,8 @@ WITH source_data AS (
         location_key,
         longitude,
         latitude,
-        police_force,
-        local_authority_district
+        {{ map_id('collision', 'police_force') }} as police_force,
+        {{ map_id('collision', 'local_authority_district') }} as local_authority_district
     from {{ ref('int_collisions') }}
 )
 

@@ -6,16 +6,16 @@
 WITH source_data AS (
     select distinct
         vehicle_profile_key,
-        vehicle_type,
-        junction_location,
-        vehicle_left_hand_drive,
-        sex_of_driver,
+        {{ map_id('vehicle', 'vehicle_type') }} as vehicle_type,
+        {{ map_id('vehicle', 'junction_location') }} as junction_location,
+        {{ map_id('vehicle', 'vehicle_left_hand_drive') }} as vehicle_left_hand_drive,
+        {{ map_id('vehicle', 'sex_of_driver') }} as sex_of_driver,
         age_of_driver,
-        age_band_of_driver,
+        {{ map_id('vehicle', 'age_band_of_driver') }} as age_band_of_driver,
         engine_capacity_cc,
-        propulsion_code,
+        {{ map_id('vehicle', 'propulsion_code') }} as propulsion_code,
         age_of_vehicle,
-        driver_distance_banding,
+        {{ map_id('vehicle', 'driver_distance_banding') }} as driver_distance_banding,
         engine_capacity_banding,
         age_band_of_vehicle
     from {{ ref('int_vehicles') }}
