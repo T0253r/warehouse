@@ -4,11 +4,9 @@ Projekt zawiera implementację potoku przetwarzania i transformacji brytyjskich 
 
 ## Architektura Systemu
 
-Poniższy diagram przedstawia ogólny przepływ danych (data flow) w systemie:
+Poniższy diagram przedstawia ogólny układ tabel w projekcie:
 
 ![Architektura systemu](diagrams/overview.jpg)
-
-Dane pobierane są ze źródeł, a następnie ładowane do analitycznej bazy danych. Następnie poddawane są wielowarstwowej transformacji, czyszczeniu oraz modelowaniu do ustrukturyzowanej formy, przygotowanej na potrzeby warstwy wizualizacji.
 
 ## Model Danych
 
@@ -99,7 +97,7 @@ W dbt modele danych definiuje się jako niezależne zapytania `SELECT`. System a
   {% endif %}
   ```
 
-- **Testowanie Jakości Danych:**
+- **Testowanie Danych:**
   System obsługuje automatyczne testowanie poprawności i spójności danych:
   - *Testy generyczne (deklaratywne):* Definiowane w plikach konfiguracyjnych YAML, pozwalające na szybkie asercje takie jak unikalność wartości czy brak wartości NULL.
   - *Testy niestandardowe (singular):* Dedykowane zapytania SQL, które w przypadku wykrycia błędnych wierszy powodują niepowodzenie testu.
@@ -137,7 +135,7 @@ W dbt modele danych definiuje się jako niezależne zapytania `SELECT`. System a
         path: "/sciezka/do/lokalnego/pliku/stats19.duckdb"
       prod:
         type: duckdb
-        path: "md:stats19?motherduck_token=<TWÓJ_TOKEN_MOTHERDUCK>"
+        path: "md:stats19?motherduck_token=<TOKEN_MOTHERDUCK>"
   ```
 
 - **Makra:**
@@ -159,7 +157,7 @@ W dbt modele danych definiuje się jako niezależne zapytania `SELECT`. System a
   {% endmacro %}
   ```
 
-- **Seedy (Seeds):**
+- **Seedy:**
   Pliki CSV z danymi referencyjnymi (np. słowniki, mapowania), wersjonowane bezpośrednio w repozytorium Git, które dbt potrafi załadować do bazy danych jako zwykłe tabele i na które można powołać się za pomocą funkcji `ref()`.
   
   *Przykład zawartości pliku słownika (`seeds/dft_data_guide/seed_data_guide.csv`):*
@@ -231,7 +229,7 @@ warehouse:
     # Konfiguracja opcjonalna
     prod:
       type: duckdb
-      path: "md:stats19?motherduck_token=<TWÓJ_TOKEN_MOTHERDUCK>"
+      path: "md:stats19?motherduck_token=<TOKEN_MOTHERDUCK>"
       schema: main
       threads: 4
 ```
