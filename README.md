@@ -65,7 +65,6 @@ dbt_project/
 #### Kluczowe cechy z perspektywy hurtowni danych:
 * **Architektura Kolumnowa (Column-store):** Podobnie jak klasyczne hurtownie danych (np. Snowflake, Teradata, ClickHouse), DuckDB przechowuje i przetwarza dane kolumnowo, co drastycznie przyspiesza zapytania agregujące i analityczne.
 * **Wektorowe Przetwarzanie Zapytań:** Wykorzystuje nowoczesne instrukcje procesora (SIMD) do przetwarzania danych w paczkach (wektorach), minimalizując narzut systemowy.
-* **Pełny, Standardowy SQL:** Wspiera zaawansowany SQL, w tym funkcje okna (Window Functions), zapytania zagnieżdżone (CTE) oraz złożone złączenia (JOINs).
 * **Wbudowana Integracja z Nowoczesnym Ekosystemem:** Baza natywnie i bezstratnie współpracuje z formatami takimi jak **Parquet, CSV, JSON** oraz technologiami **Arrow, Pandas czy Polars**, pozwalając na odpytywanie plików bezpośrednio, bez konieczności ich wcześniejszego importu (Query-in-Place).
 * **Brak Serwera (Serverless/Embedded):** Działa wewnątrz procesu aplikacji (np. skryptu Pythona, aplikacji w dbt czy BI). Nie wymaga instalacji, konfiguracji uprawnień ani zarządzania klastrem.
 
