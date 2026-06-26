@@ -1,0 +1,229 @@
+// ==========================================
+// FACT TABLES
+// ==========================================
+
+Table Fact_Collision {
+  collision_key string [pk]
+  collision_index string [note: 'business_key']
+  date_key string 
+  time_key string 
+  location_key string 
+  infrastructure_key string 
+  condition_key string 
+  number_of_vehicles int
+  number_of_casualties int
+  number_of_fatalities int [note: 'Added column not present in source']
+
+  Note: '''
+  Columns skipped to limit project scope:
+  - collision_severity
+  - enhanced_collision_severity
+  - collision_injury_based
+  - collision_year
+  - collision_ref_no
+  - did_police_officer_attend_scene_of_accident
+  - did_police_officer_attend_scene_of_collision
+  - collision_adjusted_serious
+  - collision_adjusted_slight
+  '''
+}
+
+Table Fact_Vehicle_Involvement {
+  vehicle_involvement_key string [pk]
+  collision_index string [note: 'business_key']
+  date_key string 
+  time_key string 
+  location_key string 
+  infrastructure_key string 
+  condition_key string 
+  vehicle_profile_key string 
+  dynamics_key string 
+}
+
+Table Fact_Casualty_Involvement {
+  casualty_involvement_key string [pk]
+  collision_index string [note: 'business_key']
+  date_key string 
+  time_key string 
+  location_key string 
+  infrastructure_key string 
+  condition_key string 
+  casualty_profile_key string 
+  vehicle_profile_key string 
+}
+
+// ==========================================
+// DIMENSION TABLES
+// ==========================================
+
+Table Dim_Casualty_Profile {
+  casualty_profile_key string [pk]
+  casualty_class string
+  casualty_type string
+  sex_of_casualty string
+  age_of_casualty int
+  age_band_of_casualty string
+  casualty_severity string [note: 'with mapped enhanced_casualty_severity']
+  pedestrian_location string
+  pedestrian_movement string
+  car_passenger string
+  casualty_distance_banding string
+
+  Note: '''
+  Columns skipped to limit project scope:
+  - bus_or_coach_passenger
+  - casualty_imd_decile
+  - collision_year
+  - collision_ref_no
+  - vehicle_reference
+  - casualty_reference
+  - pedestrian_road_maintenance_worker
+  - lsoa_of_casualty
+  - casualty_injury_based
+  - casualty_adjusted_serious
+  - casualty_adjusted_slight
+  '''
+}
+
+Table Dim_Vehicle_Profile {
+  vehicle_profile_key string [pk]
+  vehicle_type string
+  junction_location string
+  vehicle_left_hand_drive string
+  sex_of_driver string
+  age_of_driver int
+  age_band_of_driver string
+  engine_capacity_cc int
+  propulsion_code string
+  age_of_vehicle int
+  driver_distance_banding string
+  engine_capacity_banding string [note: 'Added column not present in source']
+  age_band_of_vehicle string [note: 'Added column not present in source']
+
+  Note: '''
+  Columns skipped to limit project scope:
+  - towing_and_articulation
+  - vehicle_manoeuvre
+  - vehicle_direction_from
+  - vehicle_direction_to
+  - vehicle_location_restricted_lane
+  - journey_purpose_of_driver
+  - generic_make_model
+  - driver_imd_decile
+  - escooter_flag
+  - lsoa_of_driver
+  - collision_year
+  - collision_ref_no
+  - vehicle_reference
+  - vehicle_manoeuvre_historic
+  - vehicle_location_restricted_lane_historic
+  - journey_purpose_of_driver_historic
+  '''
+}
+
+Table Dim_Collision_Dynamics {
+  dynamics_key string [pk]
+  skidding_and_overturning string
+  hit_object_in_carriageway string
+  vehicle_leaving_carriageway string
+  hit_object_off_carriageway string
+  first_point_of_impact string
+}
+
+Table Dim_Date {
+  date_key string [pk]
+  collision_date date [note: '+ other columns from dbt-date package']
+}
+
+Table Dim_Time {
+  time_key string [pk]
+  collision_time time
+  collision_hour int
+  is_rush_hour bool
+  time_of_day string
+}
+
+Table Dim_Location {
+  location_key string [pk]
+  longitude float
+  latitude float
+  police_force string
+  local_authority_district string
+
+  Note: '''
+  Columns skipped to limit project scope:
+  - location_easting_osgr
+  - location_northing_osgr
+  - local_authority_highway
+  - urban_or_rural_area
+  - lsoa_of_accident_location
+  - local_authority_ons_district
+  - local_authority_highway_current
+  - lsoa_of_collision_location
+  '''
+}
+
+Table Dim_Infrastructures {
+  infrastructure_key string [pk]
+  road_type string
+  speed_limit int
+  junction_detail string
+  junction_control string
+
+  Note: '''
+  Columns skipped to limit project scope:
+  - pedestrian_crossing
+  - first_road_class
+  - first_road_number
+  - second_road_class
+  - second_road_number
+  - junction_detail_historic
+  - pedestrian_crossing_human_control_historic
+  - pedestrian_crossing_physical_facilities_historic
+  - trunk_road_flag
+  '''
+}
+
+Table Dim_Conditions {
+  condition_key string [pk]
+  light_conditions string
+  weather_conditions string
+  road_surface_conditions string
+  special_conditions_at_site string
+  carriageway_hazards string [note: 'with mapped carriageway_hazards_historic']
+}
+
+// ==========================================
+// RELATIONSHIPS
+// ==========================================
+// Direction syntax (>) points from "Many" (Fact) to "One" (Dimension)
+
+// Fact_Collision to Dimensions
+Ref: Fact_Collision.date_key > Dim_Date.date_key
+Ref: Fact_Collision.time_key > Dim_Time.time_key
+Ref: Fact_Collision.location_key > Dim_Location.location_key
+Ref: Fact_Collision.infrastructure_key > Dim_Infrastructures.infrastructure_key
+Ref: Fact_Collision.condition_key > Dim_Conditions.condition_key
+
+// Fact_Vehicle_Involvement to Dimensions
+Ref: Fact_Vehicle_Involvement.date_key > Dim_Date.date_key
+Ref: Fact_Vehicle_Involvement.time_key > Dim_Time.time_key
+Ref: Fact_Vehicle_Involvement.location_key > Dim_Location.location_key
+Ref: Fact_Vehicle_Involvement.infrastructure_key > Dim_Infrastructures.infrastructure_key
+Ref: Fact_Vehicle_Involvement.condition_key > Dim_Conditions.condition_key
+Ref: Fact_Vehicle_Involvement.vehicle_profile_key > Dim_Vehicle_Profile.vehicle_profile_key
+Ref: Fact_Vehicle_Involvement.dynamics_key > Dim_Collision_Dynamics.dynamics_key
+
+// Fact_Casualty_Involvement to Dimensions
+Ref: Fact_Casualty_Involvement.date_key > Dim_Date.date_key
+Ref: Fact_Casualty_Involvement.time_key > Dim_Time.time_key
+Ref: Fact_Casualty_Involvement.location_key > Dim_Location.location_key
+Ref: Fact_Casualty_Involvement.infrastructure_key > Dim_Infrastructures.infrastructure_key
+Ref: Fact_Casualty_Involvement.condition_key > Dim_Conditions.condition_key
+Ref: Fact_Casualty_Involvement.vehicle_profile_key > Dim_Vehicle_Profile.vehicle_profile_key
+Ref: Fact_Casualty_Involvement.casualty_profile_key > Dim_Casualty_Profile.casualty_profile_key
+
+// Fact-to-Fact specific linking (One collision -> Many involvements)
+// (Your original stroke-dash styling isn't natively supported in standard DBML rendering engines without enterprise hacks, but the functional relations map perfectly as follows)
+Ref: Fact_Vehicle_Involvement.collision_index > Fact_Collision.collision_index
+Ref: Fact_Casualty_Involvement.collision_index > Fact_Collision.collision_index

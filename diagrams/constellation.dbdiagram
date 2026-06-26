@@ -1,0 +1,544 @@
+{
+  "version": "2.0.0",
+  "darkMode": true,
+  "gridEnabling": true,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "tablePositions": [
+      {
+        "name": "Fact_Collision",
+        "schemaName": "public",
+        "x": -512,
+        "y": 1456
+      },
+      {
+        "name": "Fact_Vehicle_Involvement",
+        "schemaName": "public",
+        "x": 724.240234375,
+        "y": 1752
+      },
+      {
+        "name": "Fact_Casualty_Involvement",
+        "schemaName": "public",
+        "x": 720,
+        "y": 1352
+      },
+      {
+        "name": "Dim_Casualty_Profile",
+        "schemaName": "public",
+        "x": 1224.9368029739774,
+        "y": 1208
+      },
+      {
+        "name": "Dim_Vehicle_Profile",
+        "schemaName": "public",
+        "x": 1224,
+        "y": 1688
+      },
+      {
+        "name": "Dim_Collision_Dynamics",
+        "schemaName": "public",
+        "x": 1220.401486988847,
+        "y": 2200
+      },
+      {
+        "name": "Dim_Date",
+        "schemaName": "public",
+        "x": 16,
+        "y": 1208
+      },
+      {
+        "name": "Dim_Time",
+        "schemaName": "public",
+        "x": 16,
+        "y": 1352
+      },
+      {
+        "name": "Dim_Location",
+        "schemaName": "public",
+        "x": 16,
+        "y": 1584
+      },
+      {
+        "name": "Dim_Infrastructures",
+        "schemaName": "public",
+        "x": 16,
+        "y": 1824
+      },
+      {
+        "name": "Dim_Conditions",
+        "schemaName": "public",
+        "x": 16,
+        "y": 2064
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "date_key"
+        ],
+        "firstTableName": "Fact_Collision",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "date_key"
+        ],
+        "secondTableName": "Dim_Date",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": -162.58966709281754,
+            "y": 1568
+          },
+          {
+            "x": -162.58966709281754,
+            "y": 1256
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "time_key"
+        ],
+        "firstTableName": "Fact_Collision",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "time_key"
+        ],
+        "secondTableName": "Dim_Time",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": -126.72496073244878,
+            "y": 1600
+          },
+          {
+            "x": -126.72496073244878,
+            "y": 1400
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "location_key"
+        ],
+        "firstTableName": "Fact_Collision",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "location_key"
+        ],
+        "secondTableName": "Dim_Location",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "infrastructure_key"
+        ],
+        "firstTableName": "Fact_Collision",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "infrastructure_key"
+        ],
+        "secondTableName": "Dim_Infrastructures",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "condition_key"
+        ],
+        "firstTableName": "Fact_Collision",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "condition_key"
+        ],
+        "secondTableName": "Dim_Conditions",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": -162.58966709281754,
+            "y": 1696
+          },
+          {
+            "x": -162.58966709281754,
+            "y": 2112
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "date_key"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "date_key"
+        ],
+        "secondTableName": "Dim_Date",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 465.34900842378687,
+            "y": 1864
+          },
+          {
+            "x": 465.34900842378687,
+            "y": 1256
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "time_key"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "time_key"
+        ],
+        "secondTableName": "Dim_Time",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 405.2681836130211,
+            "y": 1888
+          },
+          {
+            "x": 405.2681836130211,
+            "y": 1400
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "location_key"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "location_key"
+        ],
+        "secondTableName": "Dim_Location",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 369.40347725265235,
+            "y": 1920
+          },
+          {
+            "x": 369.40347725265235,
+            "y": 1632
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "infrastructure_key"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "infrastructure_key"
+        ],
+        "secondTableName": "Dim_Infrastructures",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 345.49367301240653,
+            "y": 1952
+          },
+          {
+            "x": 345.49367301240653,
+            "y": 1872
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "condition_key"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "condition_key"
+        ],
+        "secondTableName": "Dim_Conditions",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 521.5508801959002,
+            "y": 1992
+          },
+          {
+            "x": 521.5508801959002,
+            "y": 2112
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "vehicle_profile_key"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "vehicle_profile_key"
+        ],
+        "secondTableName": "Dim_Vehicle_Profile",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "dynamics_key"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "dynamics_key"
+        ],
+        "secondTableName": "Dim_Collision_Dynamics",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "date_key"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "date_key"
+        ],
+        "secondTableName": "Dim_Date",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 500.90740057400444,
+            "y": 1464
+          },
+          {
+            "x": 500.90740057400444,
+            "y": 1256
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "time_key"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "time_key"
+        ],
+        "secondTableName": "Dim_Time",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 437.24807253773014,
+            "y": 1496
+          },
+          {
+            "x": 437.24807253773014,
+            "y": 1400
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "location_key"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "location_key"
+        ],
+        "secondTableName": "Dim_Location",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 369.40347725265235,
+            "y": 1528
+          },
+          {
+            "x": 369.40347725265235,
+            "y": 1632
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "infrastructure_key"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "infrastructure_key"
+        ],
+        "secondTableName": "Dim_Infrastructures",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 345.49367301240653,
+            "y": 1560
+          },
+          {
+            "x": 345.49367301240653,
+            "y": 1872
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "condition_key"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "condition_key"
+        ],
+        "secondTableName": "Dim_Conditions",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 521.5508801959002,
+            "y": 1592
+          },
+          {
+            "x": 521.5508801959002,
+            "y": 2112
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "vehicle_profile_key"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "vehicle_profile_key"
+        ],
+        "secondTableName": "Dim_Vehicle_Profile",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "casualty_profile_key"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "casualty_profile_key"
+        ],
+        "secondTableName": "Dim_Casualty_Profile",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "collision_index"
+        ],
+        "firstTableName": "Fact_Vehicle_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "collision_index"
+        ],
+        "secondTableName": "Fact_Collision",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 638.388774955418,
+            "y": 1824
+          },
+          {
+            "x": 638.388774955418,
+            "y": 1093.660377694332
+          },
+          {
+            "x": -210.4092755733092,
+            "y": 1093.660377694332
+          },
+          {
+            "x": -210.4092755733092,
+            "y": 1536
+          }
+        ]
+      },
+      {
+        "firstFieldNames": [
+          "collision_index"
+        ],
+        "firstTableName": "Fact_Casualty_Involvement",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "collision_index"
+        ],
+        "secondTableName": "Fact_Collision",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": [
+          {
+            "x": 671.4225382548692,
+            "y": 1432
+          },
+          {
+            "x": 671.4225382548692,
+            "y": 1057.7956713339634
+          },
+          {
+            "x": -247.71044921875,
+            "y": 1057.7956713339634
+          }
+        ]
+      }
+    ]
+  },
+  "views": {}
+}
